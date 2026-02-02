@@ -544,6 +544,8 @@ public class Vision
     }
 
     /**
+     * 
+     * meep meep meep meep
      * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard deviations based
      * on number of tags, estimation strategy, and distance from the tags.
      *

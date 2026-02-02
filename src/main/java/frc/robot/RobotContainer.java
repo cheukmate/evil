@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSim;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -42,7 +44,8 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
-
+  private final Intake intake = new Intake();
+  private final IntakeSim intakesim = new IntakeSim(intake);
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
    private final SendableChooser<Command> autoChooser;
@@ -171,12 +174,13 @@ public class RobotContainer
                                                                                      Units.degreesToRadians(180))
                                            ));
       driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
+      //driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
 
 
-
+      driverXbox.a().toggleOnTrue(intake.moveToAngleCommand(-100)); //mayb?
+      driverXbox.b().toggleOnTrue(intake.moveToAngleCommand(200)); // lalala
     }
     if (DriverStation.isTest())
     {
