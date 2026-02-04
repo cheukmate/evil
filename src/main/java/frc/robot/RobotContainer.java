@@ -23,7 +23,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeSim;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+
+import static edu.wpi.first.units.Units.RPM;
+
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -46,6 +50,7 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   private final Intake intake = new Intake();
   private final IntakeSim intakesim = new IntakeSim(intake);
+  private final Shooter shooter = new Shooter();
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
    private final SendableChooser<Command> autoChooser;
@@ -146,6 +151,8 @@ public class RobotContainer
     Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
     Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
 
+   
+
 
     if (RobotBase.isSimulation())
     {
@@ -153,6 +160,7 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      shooter.setDefaultCommand(shooter.set(0));
     }
 
     // :)
@@ -178,9 +186,19 @@ public class RobotContainer
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
 
-
+// simulation pivot commands
       driverXbox.a().toggleOnTrue(intake.moveToAngleCommand(-100)); //mayb?
       driverXbox.b().toggleOnTrue(intake.moveToAngleCommand(200)); // lalala
+
+        // Schedule `setVelocity` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
+    driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
+    // Schedule `set` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    driverXbox.leftBumper().whileTrue(shooter.set(.02));
+    driverXbox.rightBumper().whileTrue(shooter.set(-.02));
+
     }
     if (DriverStation.isTest())
     {
