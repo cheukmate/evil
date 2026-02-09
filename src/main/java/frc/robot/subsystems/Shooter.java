@@ -54,24 +54,24 @@ public class Shooter extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withClosedLoopController(60, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
   .withSimClosedLoopController(0, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
   // Feedforward Constants
-  .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+  .withFeedforward(new SimpleMotorFeedforward(0, 0.2, 0))
   .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
   // Telemetry name and verbosity level
   .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
   // You could also use .withGearing(12) which does the same thing.
-  .withGearing(new MechanismGearing(GearBox.fromReductionStages(1.55, 1)))
+  .withGearing(new MechanismGearing(GearBox.fromReductionStages(0.64516290, 1)))
   // Motor properties to prevent over currenting.
-  .withMotorInverted(false)
-  .withIdleMode(MotorMode.BRAKE)
+  .withMotorInverted(true)
+  .withIdleMode(MotorMode.COAST)
   .withStatorCurrentLimit(Amps.of(40));
 
-  private TalonFX shooterMotor = new TalonFX(12); // TODO: Change device ID to something that matches reality
-  private TalonFX shooterMotorFollower = new TalonFX(13); // TODO: same as the other one :3
+  private TalonFX shooterMotor = new TalonFX(12); 
+  private TalonFX shooterMotorFollower = new TalonFX(13); 
 
   
 
@@ -85,7 +85,7 @@ public class Shooter extends SubsystemBase {
   // Diameter of the flywheel.
   .withDiameter(Inches.of(4))
   // Mass of the flywheel.
-  .withMass(Pounds.of(1))
+  .withMass(Pounds.of(2))
   // Maximum speed of the shooter.
   .withUpperSoftLimit(RPM.of(1000))
   // Telemetry name and verbosity for the arm.

@@ -17,13 +17,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeSim;
+import frc.robot.subsystems.IntakeWheels;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter2PleaseWorkPLease;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 import static edu.wpi.first.units.Units.RPM;
@@ -50,7 +53,8 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   private final Intake intake = new Intake();
   private final IntakeSim intakesim = new IntakeSim(intake);
-  private final Shooter shooter = new Shooter();
+  private final Shooter2PleaseWorkPLease shooter = new Shooter2PleaseWorkPLease();
+  private final IntakeWheels test = new IntakeWheels();
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
    private final SendableChooser<Command> autoChooser;
@@ -160,7 +164,8 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      shooter.setDefaultCommand(shooter.set(0));
+      // shooter.setDefaultCommand(shooter.set(0.0));
+      
     }
 
     // :)
@@ -192,12 +197,13 @@ public class RobotContainer
 
         // Schedule `setVelocity` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
-    driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
+    // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
+    // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(10)));
+    driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
     // Schedule `set` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    driverXbox.leftBumper().whileTrue(shooter.set(.02));
-    driverXbox.rightBumper().whileTrue(shooter.set(-.02));
+    // driverXbox.leftBumper().whileTrue(shooter.set(.02));
+    // driverXbox.rightBumper().whileTrue(shooter.set(-.02));
 
     }
     if (DriverStation.isTest())
@@ -216,8 +222,24 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
-    }
 
+    // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
+    // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
+
+    //NOT FINAL
+    driverXbox.b().whileTrue(new InstantCommand(()-> test.Intake(-.8)));
+
+    driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
+
+
+ driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
+
+
+
+
+    driverXbox.b().whileFalse(new InstantCommand(()-> test.Intake(0)));
+    }
+   
   }
 
   /**
