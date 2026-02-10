@@ -27,6 +27,7 @@ import frc.robot.subsystems.IntakeSim;
 import frc.robot.subsystems.IntakeWheels;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter2PleaseWorkPLease;
+import frc.robot.subsystems.Shooter3;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 import static edu.wpi.first.units.Units.RPM;
@@ -53,7 +54,7 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   private final Intake intake = new Intake();
   private final IntakeSim intakesim = new IntakeSim(intake);
-  private final Shooter2PleaseWorkPLease shooter = new Shooter2PleaseWorkPLease();
+  private final Shooter3 shooter = new Shooter3();
   private final IntakeWheels test = new IntakeWheels();
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
@@ -164,7 +165,7 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      // shooter.setDefaultCommand(shooter.set(0.0));
+      shooter.setDefaultCommand(shooter.setVelocity(((0))));
       
     }
 
@@ -199,7 +200,7 @@ public class RobotContainer
     // cancelling on release.
     // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(10)));
-    driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
+    driverXbox.y().onTrue(shooter.setVelocity(300));
     // Schedule `set` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driverXbox.leftBumper().whileTrue(shooter.set(.02));
@@ -229,10 +230,10 @@ public class RobotContainer
     //NOT FINAL
     driverXbox.b().whileTrue(new InstantCommand(()-> test.Intake(-.8)));
 
-    driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
+//     driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
 
 
- driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
+//  driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
 
 
 
