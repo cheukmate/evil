@@ -27,6 +27,12 @@ public class IntakeWheels extends SubsystemBase {
 
   
   public IntakeWheels() {
+    configureMotor();
+    
+    
+  }
+
+  public void configureMotor(){
     config.idleMode(IdleMode.kCoast);
     config.voltageCompensation(12.3);
     config.smartCurrentLimit(40);
@@ -34,7 +40,6 @@ public class IntakeWheels extends SubsystemBase {
 
     wheels.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     wheelsFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    
   }
 
   public void Intake(double speed){
@@ -42,9 +47,6 @@ public class IntakeWheels extends SubsystemBase {
     wheelsFollower.set(speed);
   }
 
-  
-
-  
 
   @Override
   public void periodic() {

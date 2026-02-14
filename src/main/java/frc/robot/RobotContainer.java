@@ -22,8 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.IntakeSim;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeWheels;
 import frc.robot.subsystems.Shooter2PleaseWorkPLease;
 import frc.robot.subsystems.Shooter3;
@@ -52,10 +51,10 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
-  private final Intake intake = new Intake();
-  private final IntakeSim intakesim = new IntakeSim(intake);
+
   private final Shooter3 shooter = new Shooter3();
   private final IntakeWheels test = new IntakeWheels();
+  private final Climber climber = new Climber();
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
    private final SendableChooser<Command> autoChooser;
@@ -165,7 +164,7 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      shooter.setDefaultCommand(shooter.setVelocity(((0))));
+      shooter.setDefaultCommand(shooter.Stop());
       
     }
 
@@ -193,8 +192,7 @@ public class RobotContainer
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
 
 // simulation pivot commands
-      driverXbox.a().toggleOnTrue(intake.moveToAngleCommand(-100)); //mayb?
-      driverXbox.b().toggleOnTrue(intake.moveToAngleCommand(200)); // lalala
+     
 
         // Schedule `setVelocity` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -228,22 +226,29 @@ public class RobotContainer
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
 
     //NOT FINAL
-    driverXbox.b().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
+    driverXbox.x().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
+    driverXbox.x().whileFalse(new InstantCommand(()-> test.Intake(0)));
 
     //driverXbox.y().onTrue(shooter.setVelocity(150));
     //driverXbox.y().onFalse(shooter.setVelocity(0));
 
-    driverXbox.y().onTrue(shooter.setVelocity(8));
-     driverXbox.y().onFalse(shooter.setVelocity(0));
 
+    //shooterclosedloop beta
+     
+    driverXbox.y().onTrue(shooter.setVelocity());
+    driverXbox.y().onFalse(shooter.Stop());
 
+    driverXbox.b().onTrue(climber.Climb());
+    driverXbox.b().onFalse(climber.StopClimbing());
+
+    
  //driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
  //driverXbox.x().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
 
 
 
 
-    driverXbox.b().whileFalse(new InstantCommand(()-> test.Intake(0)));
+    
     }
    
   }

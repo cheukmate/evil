@@ -78,7 +78,7 @@ public final class Constants
 
     public static final String INDEXER = "null"; // do later
 
-    public static final int FLYWHEELINTAKE = 39;
+    public static final int KICKER = 39;
 
     // Intake ID Constants
 
