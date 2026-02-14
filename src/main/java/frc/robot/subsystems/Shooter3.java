@@ -86,7 +86,7 @@ public class Shooter3 extends SubsystemBase {
 
    @Override
 
-   //TODO: remove before competition, can usage 
+   //TODO: remove before competition, can usage and such
    public void periodic() {
      //This method will be called once per scheduler run
      SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMaster.getVelocity().getValueAsDouble());
