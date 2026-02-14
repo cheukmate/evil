@@ -25,9 +25,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeSim;
 import frc.robot.subsystems.IntakeWheels;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter2PleaseWorkPLease;
 import frc.robot.subsystems.Shooter3;
+//import frc.robot.subsystems.Shooter3;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 import static edu.wpi.first.units.Units.RPM;
@@ -200,7 +200,7 @@ public class RobotContainer
     // cancelling on release.
     // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(10)));
-    driverXbox.y().onTrue(shooter.setVelocity(300));
+    //driverXbox.y().onTrue(shooter.setVelocity(300));
     // Schedule `set` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driverXbox.leftBumper().whileTrue(shooter.set(.02));
@@ -228,12 +228,17 @@ public class RobotContainer
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
 
     //NOT FINAL
-    driverXbox.b().whileTrue(new InstantCommand(()-> test.Intake(-.8)));
+    driverXbox.b().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
 
-//     driverXbox.y().whileTrue(new InstantCommand(()-> shooter.Runmotor()));
+    //driverXbox.y().onTrue(shooter.setVelocity(150));
+    //driverXbox.y().onFalse(shooter.setVelocity(0));
+
+    driverXbox.y().onTrue(shooter.setVelocity(8));
+     driverXbox.y().onFalse(shooter.setVelocity(0));
 
 
-//  driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
+ //driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
+ //driverXbox.x().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
 
 
 

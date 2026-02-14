@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import yams.mechanisms.positional.Pivot;
 
 /**
@@ -38,7 +39,7 @@ public class Intake extends SubsystemBase {
 
   // Constants
   private final DCMotor dcMotor = DCMotor.getNEO(1);
-  private final int canID = 11;
+
   private final double gearRatio = 47.999;
   private final double kP = .9;
   private final double kI = 0;
@@ -78,7 +79,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     // Initialize motor controller
     SparkMaxConfig motorConfig = new SparkMaxConfig();
-    motor = new SparkMax(canID, MotorType.kBrushless);
+    motor = new SparkMax(Constants.IDConstants.PIVOT, MotorType.kBrushless);
     motorConfig.idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
 
     // Configure encoder

@@ -48,4 +48,52 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
+
+  public static final class IDConstants{
+
+    // Swerve Motor ID Constants.
+
+    public static final int FRONTLEFT_DRIVE = 2; 
+    public static final int FRONTLEFT_ANGLE = 1;
+    public static final int FRONTLEFT_ENCODER = 21;
+
+    public static final int FRONTRIGHT_DRIVE = 7;
+    public static final int FRONTRIGHT_ANGLE = 6; 
+    public static final int FRONTRIGHT_ENCODER = 23;
+
+    public static final int BACKLEFT_DRIVE = 3;
+    public static final int BACKLEFT_ANGLE = 4;
+    public static final int BACKLEFT_ENCODER = 22;
+
+    public static final int BACKRIGHT_DRIVE = 8;
+    public static final int BACKRIGHT_ANGLE = 9;
+    public static final int BACKRIGHT_ENCODER = 24;
+
+    // Shooter ID Constants
+
+    public static final int FLYWHEEL_MOTOR_MAIN_KRAKEN = 12;
+    public static final int FLYWHEEL_MOTOR_FOLLOWER_KRAKEN = 13;
+
+    public static final int SHOOTERHOOD = 38;
+
+    public static final String INDEXER = "null"; // do later
+
+    public static final int FLYWHEELINTAKE = 39;
+
+    // Intake ID Constants
+
+    public static final int PIVOT = 34;
+
+    public static final int INTAKEWHEELS_FLEX_MAIN = 17;
+
+    public static final int INTAKEWHEELS_FLEX_FOLLOWER = 18;
+
+    // Climber ID Constants
+
+    public static final int CLIMBER_ID = 19;
+
+
+
+
+  }
 }
