@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeWheels;
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter2PleaseWorkPLease;
 import frc.robot.subsystems.Shooter3;
 //import frc.robot.subsystems.Shooter3;
@@ -48,6 +49,7 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController operatorXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
@@ -55,6 +57,7 @@ public class RobotContainer
   private final Shooter3 shooter = new Shooter3();
   private final IntakeWheels test = new IntakeWheels();
   private final Climber climber = new Climber();
+  private final Pivot pivot = new Pivot();
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
    private final SendableChooser<Command> autoChooser;
@@ -226,8 +229,8 @@ public class RobotContainer
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
 
     //NOT FINAL
-    driverXbox.x().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
-    driverXbox.x().whileFalse(new InstantCommand(()-> test.Intake(0)));
+    operatorXbox.x().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
+    operatorXbox.x().whileFalse(new InstantCommand(()-> test.Intake(0)));
 
     //driverXbox.y().onTrue(shooter.setVelocity(150));
     //driverXbox.y().onFalse(shooter.setVelocity(0));
@@ -235,17 +238,20 @@ public class RobotContainer
 
     //shooterclosedloop beta
      
-    driverXbox.y().onTrue(shooter.setVelocity());
-    driverXbox.y().onFalse(shooter.Stop());
+    operatorXbox.y().onTrue(shooter.setVelocity());
+    operatorXbox.y().onFalse(shooter.Stop());
 
-    driverXbox.b().onTrue(climber.Climb());
-    driverXbox.b().onFalse(climber.StopClimbing());
+    operatorXbox.b().onTrue(climber.Climb());
+    operatorXbox.b().onFalse(climber.StopClimbing());
 
     
  //driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
  //driverXbox.x().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
 
+      //pivot commands
 
+      operatorXbox.a().onTrue(pivot.pivotToAngle(90));
+      operatorXbox.b().onTrue(pivot.Stow());
 
 
     

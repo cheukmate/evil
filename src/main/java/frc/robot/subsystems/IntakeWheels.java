@@ -38,7 +38,7 @@ public class IntakeWheels extends SubsystemBase {
     config.smartCurrentLimit(40);
     
 
-    wheels.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    wheels.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     wheelsFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 

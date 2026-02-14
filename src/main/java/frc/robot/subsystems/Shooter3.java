@@ -51,7 +51,7 @@ public class Shooter3 extends SubsystemBase {
 
   configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-  configs.Feedback.SensorToMechanismRatio = .06; // gear ratio, CHANGE TO REALITY
+  configs.Feedback.SensorToMechanismRatio = .645161; 
  
       shooterMaster.getConfigurator().apply(configs);
       shooterSlave.getConfigurator().apply(new TalonFXConfiguration());
