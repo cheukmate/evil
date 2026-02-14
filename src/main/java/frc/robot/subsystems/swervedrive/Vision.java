@@ -52,7 +52,7 @@ public class Vision
    * April Tag Field Layout of the year.
    */
   public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2022RapidReact);
+      AprilTagFields.k2026RebuiltWelded);
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
@@ -337,13 +337,21 @@ public class Vision
     /**
      * Center Camera
      */
-    CENTER_CAM("center",
+    Limelight("Limelight",
+               new Rotation3d(0, Units.degreesToRadians(18), 0),
+               new Translation3d(Units.inchesToMeters(-4.628),
+                                 Units.inchesToMeters(-10.687),
+                                 Units.inchesToMeters(16.129)),
+               VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+
+               //TODO: this is a placeholder, we need to determine the actual standard deviations for the cameras. These values are not based on any real data and are just guesses.
+               
+    DRIVER_CAM("DRIVER_CAM",
                new Rotation3d(0, Units.degreesToRadians(18), 0),
                new Translation3d(Units.inchesToMeters(-4.628),
                                  Units.inchesToMeters(-10.687),
                                  Units.inchesToMeters(16.129)),
                VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
-
     /**
      * Latency alert to use when high latency is detected.
      */
