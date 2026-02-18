@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private final SwerveDrive swerveDrive;
  
-  private Vision vision;
+
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -94,7 +94,7 @@ public class SwerveSubsystem extends SubsystemBase
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     // swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
     
-    this.vision = new Vision(this::getPose, swerveDrive.field);
+    
     setupPathPlanner();
 
   }
@@ -117,7 +117,7 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    vision.updatePoseEstimation(swerveDrive);
+    
   }
 
   @Override
