@@ -167,7 +167,7 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      shooter.setDefaultCommand(shooter.Stop());
+      //shooter.setDefaultCommand(shooter.Stop());
       
     }
 
@@ -238,11 +238,14 @@ public class RobotContainer
 
     //shooterclosedloop beta
      
-    operatorXbox.y().onTrue(shooter.setVelocity());
-    operatorXbox.y().onFalse(shooter.Stop());
+    // operatorXbox.y().onTrue(shooter.setVelocity());
+    // operatorXbox.y().onFalse(shooter.Stop());
 
-    operatorXbox.b().onTrue(climber.Climb());
-    operatorXbox.b().onFalse(climber.StopClimbing());
+    driverXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(5)));
+    driverXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
+
+    // operatorXbox.b().onTrue(climber.Climb());
+    // operatorXbox.b().onFalse(climber.StopClimbing());
 
     
  //driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
@@ -250,10 +253,12 @@ public class RobotContainer
 
       //pivot commands
 
-      operatorXbox.a().onTrue(pivot.pivotToAngle(90));
-      operatorXbox.b().onTrue(pivot.Stow());
+      // operatorXbox.a().onTrue(pivot.pivotToAngle(90));
+      // operatorXbox.b().onTrue(pivot.Stow());
 
-
+      operatorXbox.a().onTrue(new InstantCommand(()-> pivot.stupidCommand(-.4)));
+      
+      operatorXbox.a().onFalse(new InstantCommand(()-> pivot.stupidCommand(0)));
     
     }
    

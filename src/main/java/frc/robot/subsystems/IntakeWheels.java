@@ -43,7 +43,7 @@ public class IntakeWheels extends SubsystemBase {
   }
 
   public void Intake(double speed){
-    wheels.set(speed);
+    wheels.set(-speed);
     wheelsFollower.set(speed);
   }
 
