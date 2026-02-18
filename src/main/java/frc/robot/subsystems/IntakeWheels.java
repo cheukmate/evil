@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -23,7 +24,10 @@ public class IntakeWheels extends SubsystemBase {
   SparkFlex wheels  = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
   SparkFlex wheelsFollower = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
 
+  SparkMax indexer = new SparkMax(Constants.IDConstants.INDEXER, MotorType.kBrushless);
+
   SparkFlexConfig config = new SparkFlexConfig();
+  SparkMaxConfig config2 = new SparkMaxConfig();
 
   
   public IntakeWheels() {
@@ -39,11 +43,17 @@ public class IntakeWheels extends SubsystemBase {
     
 
     wheels.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    wheelsFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    wheelsFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    config2.idleMode(IdleMode.kCoast);
+    config2.voltageCompensation(12.3);
+    config2.smartCurrentLimit(25);
+
+    indexer.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void Intake(double speed){
-    wheels.set(speed);
+    wheels.set(-speed);
     wheelsFollower.set(speed);
   }
 

@@ -27,7 +27,7 @@ public class Shooter3 extends SubsystemBase {
 
   // Requests
 
-  VelocityVoltage velocityRequest = new VelocityVoltage(0);
+  VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   NeutralOut neturalRequest = new NeutralOut();
 
   public Shooter3() {
@@ -42,19 +42,23 @@ public class Shooter3 extends SubsystemBase {
    Slot0Configs slot0Configs = new Slot0Configs();
 
 
-  slot0Configs.kS = 0.00;
+  slot0Configs.kS = 0.05;
   slot0Configs.kV = 0.12;
-  slot0Configs.kA = 0.0;
-  slot0Configs.kP = 0.000000;
+  slot0Configs.kA = 0.00;
+  slot0Configs.kP = 0.0001;
   slot0Configs.kI = 0;
   slot0Configs.kD = 0.00;
 
   configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
   configs.Feedback.SensorToMechanismRatio = .645161; 
- 
+
       shooterMaster.getConfigurator().apply(configs);
-      shooterSlave.getConfigurator().apply(new TalonFXConfiguration());
+      shooterSlave.getConfigurator().apply(configs);
+ 
+      shooterMaster.getConfigurator().apply(slot0Configs);
+      shooterSlave.getConfigurator().apply(slot0Configs);
+
       shooterSlave.setControl(new Follower(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN, MotorAlignmentValue.Aligned));
 
   }
@@ -91,5 +95,7 @@ public class Shooter3 extends SubsystemBase {
      //This method will be called once per scheduler run
      SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMaster.getVelocity().getValueAsDouble());
      SmartDashboard.putNumber("Flywheel/Voltage", shooterMaster.getMotorVoltage().getValueAsDouble());
+    //SmartDashboard.putBoolean("Position", shooterMaster.getMotorKV());
+     
    }
  }

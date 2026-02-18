@@ -78,7 +78,7 @@ public final class Constants
 
     public static final int SHOOTERHOOD = 38;
 
-    public static final String INDEXER = "null"; // do later
+    public static final int INDEXER = 14;
 
     public static final int KICKER = 39;
 

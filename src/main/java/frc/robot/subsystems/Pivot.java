@@ -71,7 +71,8 @@ SparkMaxConfig globalConfig = new SparkMaxConfig();
     .maxMotion
             .cruiseVelocity(150)
             .maxAcceleration(300)
-            .allowedProfileError(1.0);
+            .allowedProfileError(1.0)
+            .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
     globalConfig.softLimit
     .forwardSoftLimit(100.0)
     .reverseSoftLimit(-5.0)
@@ -109,10 +110,17 @@ return pivotToAngle(STOW_ANGLE);
 
 }
 
+public void stupidCommand(double power){
+  pivot.set(power);
+
+}
+//no position control ^
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Pivot Angle", pivot.getEncoder().getPosition());
+    //SmartDashboard.putNumber("Pivot Setpoint", pivot.getClosedLoopController().getMAXMotionSetpointPosition());
+    
   }
 }
