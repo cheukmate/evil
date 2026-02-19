@@ -231,7 +231,7 @@ public class RobotContainer
     // operatorXbox.y().onTrue(shooter.setVelocity());
     // operatorXbox.y().onFalse(shooter.Stop());
 
-    operatorXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(5)));
+    operatorXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(30)));
     operatorXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
 
     // operatorXbox.b().onTrue(climber.Climb());

@@ -84,7 +84,7 @@ public class Shooter3 extends SubsystemBase {
 
   public Command setVelocity(){
     return run(() -> {
-      setVelocityVoid(8);
+      setVelocityVoid(40);
     });
 
   }
