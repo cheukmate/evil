@@ -181,7 +181,7 @@ public class RobotContainer
     
 
 // simulation pivot commands
-     
+     // ------------------------------------------------------------------------------------ HORRIBLE AND EVIL ---------------------------------------------------------------------
 
     // Schedule `setVelocity` when the Xbox controller's B button is pressed,
     // cancelling on release.
