@@ -21,8 +21,8 @@ import frc.robot.Constants;
 public class Shooter3 extends SubsystemBase {
   /** Creates a new Shooter3. */
 
-  TalonFX shooterMaster = new TalonFX(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN);
-  TalonFX shooterSlave = new TalonFX(Constants.IDConstants.FLYWHEEL_MOTOR_FOLLOWER_KRAKEN);
+  TalonFX shooterMotorPrimary = new TalonFX(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN);
+  TalonFX shooterMotorSecondary = new TalonFX(Constants.IDConstants.FLYWHEEL_MOTOR_FOLLOWER_KRAKEN);
 
 
   // Requests
@@ -53,22 +53,24 @@ public class Shooter3 extends SubsystemBase {
 
   configs.Feedback.SensorToMechanismRatio = .645161; 
 
-      shooterMaster.getConfigurator().apply(configs);
-      shooterSlave.getConfigurator().apply(configs);
+      shooterMotorPrimary.getConfigurator().apply(configs);
+      shooterMotorSecondary.getConfigurator().apply(configs);
  
-      shooterMaster.getConfigurator().apply(slot0Configs);
-      shooterSlave.getConfigurator().apply(slot0Configs);
+      shooterMotorPrimary.getConfigurator().apply(slot0Configs);
+      shooterMotorSecondary.getConfigurator().apply(slot0Configs);
 
-      shooterSlave.setControl(new Follower(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN, MotorAlignmentValue.Aligned));
+  
 
   }
 
   public void setVelocityVoid(double rps){
-    shooterMaster.setControl(velocityRequest.withVelocity(rps).withSlot(0));
+    shooterMotorPrimary.setControl(velocityRequest.withVelocity(rps).withSlot(0));
+    shooterMotorSecondary.setControl(velocityRequest.withVelocity(rps).withSlot(0));
   }
 
   public void StopVoid(){
-    shooterMaster.setControl(neturalRequest);
+    shooterMotorPrimary.setControl(neturalRequest);
+    shooterMotorSecondary.setControl(neturalRequest);
   }
 
   public Command Stop(){
@@ -93,8 +95,11 @@ public class Shooter3 extends SubsystemBase {
    //TODO: remove before competition, can usage and such
    public void periodic() {
      //This method will be called once per scheduler run
-     SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMaster.getVelocity().getValueAsDouble());
-     SmartDashboard.putNumber("Flywheel/Voltage", shooterMaster.getMotorVoltage().getValueAsDouble());
+     SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMotorPrimary.getVelocity().getValueAsDouble());
+     SmartDashboard.putNumber("Flywheel/Voltage", shooterMotorPrimary.getMotorVoltage().getValueAsDouble());
+
+     SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMotorSecondary.getVelocity().getValueAsDouble());
+     SmartDashboard.putNumber("Flywheel/Voltage", shooterMotorSecondary.getMotorVoltage().getValueAsDouble());
     //SmartDashboard.putBoolean("Position", shooterMaster.getMotorKV());
      
    }

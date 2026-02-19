@@ -28,7 +28,7 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter3;
 //import frc.robot.subsystems.Shooter3;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-
+import limelight.networktables.LimelightTargetData;
 
 import java.io.File;
 
@@ -36,6 +36,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import swervelib.SwerveInputStream;
+import frc.robot.FieldConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -206,6 +207,9 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      //ts probably does NOT work
+      driverXbox.leftTrigger().onTrue(new InstantCommand(() -> driveAngularVelocity.aim(FieldConstants.Hub.nearFace)));
+      
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.none());
@@ -227,8 +231,8 @@ public class RobotContainer
     // operatorXbox.y().onTrue(shooter.setVelocity());
     // operatorXbox.y().onFalse(shooter.Stop());
 
-    driverXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(5)));
-    driverXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
+    operatorXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(5)));
+    operatorXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
 
     // operatorXbox.b().onTrue(climber.Climb());
     // operatorXbox.b().onFalse(climber.StopClimbing());
