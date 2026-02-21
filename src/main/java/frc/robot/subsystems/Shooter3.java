@@ -36,7 +36,7 @@ public class Shooter3 extends SubsystemBase {
 
   private void ConfigureMotors(){
 
-    //sets the follower status
+   
  
    TalonFXConfiguration configs = new TalonFXConfiguration();
    Slot0Configs slot0Configs = new Slot0Configs();
@@ -45,7 +45,7 @@ public class Shooter3 extends SubsystemBase {
   slot0Configs.kS = 0.05;
   slot0Configs.kV = 0.12;
   slot0Configs.kA = 0.00;
-  slot0Configs.kP = 0.0001;
+  slot0Configs.kP = 0.000;
   slot0Configs.kI = 0;
   slot0Configs.kD = 0.00;
 
@@ -53,22 +53,24 @@ public class Shooter3 extends SubsystemBase {
 
   configs.Feedback.SensorToMechanismRatio = .645161; 
 
-      shooterMaster.getConfigurator().apply(configs);
-      shooterSlave.getConfigurator().apply(configs);
+    //  shooterMaster.getConfigurator().apply(configs);
+     // shooterSlave.getConfigurator().apply(configs);
  
       shooterMaster.getConfigurator().apply(slot0Configs);
       shooterSlave.getConfigurator().apply(slot0Configs);
-
-      shooterSlave.setControl(new Follower(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN, MotorAlignmentValue.Aligned));
+//
+      //shooterSlave.setControl(new Follower(Constants.IDConstants.FLYWHEEL_MOTOR_MAIN_KRAKEN, MotorAlignmentValue.Aligned));
 
   }
 
-  public void setVelocityVoid(double rps){
-    shooterMaster.setControl(velocityRequest.withVelocity(rps).withSlot(0));
+  public void setVelocityVoid(double rps, double ff){
+    shooterMaster.setControl(velocityRequest.withVelocity(rps).withFeedForward(ff).withSlot(0));
+    shooterSlave.setControl(velocityRequest.withVelocity(rps).withFeedForward(ff).withSlot(0));
   }
 
   public void StopVoid(){
     shooterMaster.setControl(neturalRequest);
+    shooterSlave.setControl(neturalRequest);
   }
 
   public Command Stop(){
@@ -82,7 +84,7 @@ public class Shooter3 extends SubsystemBase {
 
   public Command setVelocity(){
     return run(() -> {
-      setVelocityVoid(8);
+      setVelocityVoid(8, .5);
     });
 
   }
@@ -95,6 +97,9 @@ public class Shooter3 extends SubsystemBase {
      //This method will be called once per scheduler run
      SmartDashboard.putNumber("Flywheel/ActualRPS", shooterMaster.getVelocity().getValueAsDouble());
      SmartDashboard.putNumber("Flywheel/Voltage", shooterMaster.getMotorVoltage().getValueAsDouble());
+
+     SmartDashboard.putNumber("Flywheel/ActualRPS", shooterSlave.getVelocity().getValueAsDouble());
+     SmartDashboard.putNumber("Flywheel/Voltage", shooterSlave.getMotorVoltage().getValueAsDouble());
     //SmartDashboard.putBoolean("Position", shooterMaster.getMotorKV());
      
    }
