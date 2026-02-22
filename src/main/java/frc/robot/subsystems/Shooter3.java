@@ -36,7 +36,7 @@ public class Shooter3 extends SubsystemBase {
 
   private void ConfigureMotors(){
 
-    //sets the follower status
+   
  
    TalonFXConfiguration configs = new TalonFXConfiguration();
    Slot0Configs slot0Configs = new Slot0Configs();
@@ -45,7 +45,7 @@ public class Shooter3 extends SubsystemBase {
   slot0Configs.kS = 0.05;
   slot0Configs.kV = 0.12;
   slot0Configs.kA = 0.00;
-  slot0Configs.kP = 0.0001;
+  slot0Configs.kP = 0.000;
   slot0Configs.kI = 0;
   slot0Configs.kD = 0.00;
 
