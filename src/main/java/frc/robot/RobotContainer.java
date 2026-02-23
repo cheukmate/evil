@@ -181,7 +181,7 @@ public class RobotContainer
     
 
 // simulation pivot commands
-     
+     // ------------------------------------------------------------------------------------ HORRIBLE AND EVIL ---------------------------------------------------------------------
 
     // Schedule `setVelocity` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -231,8 +231,8 @@ public class RobotContainer
     // operatorXbox.y().onTrue(shooter.setVelocity());
     // operatorXbox.y().onFalse(shooter.Stop());
 
-    driverXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(5, .5)));
-    driverXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
+    operatorXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(30)));
+    operatorXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
 
     // operatorXbox.b().onTrue(climber.Climb());
     // operatorXbox.b().onFalse(climber.StopClimbing());

@@ -7,10 +7,12 @@ package frc.robot.subsystems;
 import org.opencv.core.Mat;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkMaxAlternateEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -27,7 +29,8 @@ public class Pivot extends SubsystemBase {
   /** Creates a new Pivot. */
 
   SparkMax pivot = new SparkMax(Constants.IDConstants.PIVOT, MotorType.kBrushless);
-
+  private final SparkClosedLoopController pidController = pivot.getClosedLoopController();
+  RelativeEncoder encoder = pivot.getEncoder(); // i dont even think we need this but ok
 
 // Conversion Factors and gear ratio
 
@@ -35,7 +38,7 @@ public class Pivot extends SubsystemBase {
   public static final double POSITION_FACTOR = 360.0/GEAR_RATIO;
   private static final double VELOCITY_FACTOR = POSITION_FACTOR / 60.0;
 
-  private final SparkClosedLoopController pidController = pivot.getClosedLoopController();
+  
 
   // Targets
 
