@@ -63,9 +63,9 @@ public class Shooter3 extends SubsystemBase {
 
   }
 
-  public void setVelocityVoid(double rps){
-    shooterMotorPrimary.setControl(velocityRequest.withVelocity(rps).withSlot(0));
-    shooterMotorSecondary.setControl(velocityRequest.withVelocity(rps).withSlot(0));
+  public void setVelocityVoid(double rps, double ff){
+    shooterMotorPrimary.setControl(velocityRequest.withVelocity(rps).withFeedForward(ff).withSlot(0));
+    shooterMotorSecondary.setControl(velocityRequest.withVelocity(rps).withFeedForward(ff).withSlot(0));
   }
 
   public void StopVoid(){
