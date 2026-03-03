@@ -23,9 +23,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.IntakeWheels;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Shooter3;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Kicker;
+
+import frc.robot.subsystems.Shooter;
+
 //import frc.robot.subsystems.Shooter3;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import limelight.networktables.LimelightTargetData;
@@ -55,10 +57,11 @@ public class RobotContainer
 
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
-  private final Shooter3 shooter = new Shooter3();
-  private final IntakeWheels test = new IntakeWheels();
+  private final Shooter shooter = new Shooter();
+  private final Kicker kicker = new Kicker();
+
   private final Climber climber = new Climber();
-  private final Pivot pivot = new Pivot();
+  private final Intake intake = new Intake();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
@@ -170,7 +173,7 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-      shooter.setDefaultCommand(shooter.Stop());
+      shooter.setDefaultCommand(shooter.stop());
       
     }
 
@@ -219,8 +222,7 @@ public class RobotContainer
     // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
 
     //NOT FINAL
-    operatorXbox.x().whileTrue(new InstantCommand(()-> test.Intake(-.6)));
-    operatorXbox.x().whileFalse(new InstantCommand(()-> test.Intake(0)));
+    
 
     //driverXbox.y().onTrue(shooter.setVelocity(150));
     //driverXbox.y().onFalse(shooter.setVelocity(0));
@@ -231,8 +233,16 @@ public class RobotContainer
     // operatorXbox.y().onTrue(shooter.setVelocity());
     // operatorXbox.y().onFalse(shooter.Stop());
 
-    operatorXbox.y().onTrue(new InstantCommand(()-> shooter.setVelocityVoid(30)));
-    operatorXbox.y().onFalse(new InstantCommand(()-> shooter.StopVoid()));
+    operatorXbox.y().onTrue(shooter.spinUp());
+    operatorXbox.y().onFalse(shooter.stop());
+    //------------------------------------------------------------HOOD TEST------------------------------------------------------------------------------
+
+    //------------------------------------------------------------INDEXER TEST---------------------------------------------------------------------------
+    operatorXbox.rightBumper().onTrue(kicker.feedCommand());
+    operatorXbox.rightBumper().onFalse(kicker.stopCommand());
+     operatorXbox.b().whileTrue(intake.intakeCommand());
+    operatorXbox.b().whileFalse(intake.Stop());
+  }
 
     // operatorXbox.b().onTrue(climber.Climb());
     // operatorXbox.b().onFalse(climber.StopClimbing());
@@ -246,13 +256,11 @@ public class RobotContainer
       // operatorXbox.a().onTrue(pivot.pivotToAngle(90));
       // operatorXbox.b().onTrue(pivot.Stow());
 
-      operatorXbox.a().onTrue(new InstantCommand(()-> pivot.stupidCommand(-.4)));
-      
-      operatorXbox.a().onFalse(new InstantCommand(()-> pivot.stupidCommand(0)));
+         
     
     }
    
-  }
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
