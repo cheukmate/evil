@@ -1,13 +1,19 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -41,7 +47,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class Intake extends SubsystemBase {
 
-  private static final double INTAKE_SPEED = 1.0;
+  private static final double INTAKE_SPEED = 1;
 
   // ThriftyNova controlling the intake roller
   private SparkFlex roller = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
@@ -65,25 +71,48 @@ public class Intake extends SubsystemBase {
 
   private FlyWheel intake = new FlyWheel(intakeConfig);
 
+  public void Config(){
+  
+    final SparkMaxConfig pivotConfig = new SparkMaxConfig();
+    pivotConfig.closedLoop
+    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    .pid(25, 0, 0)  // TODO: TUNE TS
+    .outputRange(-1, 1)
+    .maxMotion
+            .cruiseVelocity(3)
+            .maxAcceleration(0.35)
+            .allowedProfileError(1.0)
+            .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
+    pivotConfig.softLimit
+    .forwardSoftLimit(100.0)
+    .reverseSoftLimit(-5.0)
+    .forwardSoftLimitEnabled(true)
+    .reverseSoftLimitEnabled(true);
+
+    pivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    pivotMotor.getEncoder().setPosition(0);
+  }
+
   // 5:1, 5:1, 60/18 reduction
-  private SmartMotorControllerConfig intakePivotSmartMotorConfig = new SmartMotorControllerConfig(this)
+   private SmartMotorControllerConfig intakePivotSmartMotorConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withClosedLoopController(25, 0, 0, DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360)) // change THis,base of 25
       .withFeedforward(new SimpleMotorFeedforward(0, 10, 0)) // change, base of 10
-      
-      .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 4, 4, 2.18))) // 5, 4, 4, 2.18 (hope it works lol)
-      // .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0 /
-      // 18.0, 42)))
+     // .withTrapezoidalProfile(RPM.of(3), RPM.of(.35)) 
+     .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
+    .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 4, 4, 2.18))) // 5, 4, 4, 2.18 (hope it works lol)
+     //.withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0 / 18.0, 42)))
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
       
-      .withSoftLimit(Degrees.of(0), Degrees.of(150)) //make real number
-      .withStatorCurrentLimit(Amps.of(10))
-      .withClosedLoopRampRate(Seconds.of(0.1))
+     .withSoftLimit(Degrees.of(0), Degrees.of(150)) //make real number
+    .withStatorCurrentLimit(Amps.of(10))
+ .withClosedLoopRampRate(Seconds.of(0.1))
       
-      .withOpenLoopRampRate(Seconds.of(0.1));
+.withOpenLoopRampRate(Seconds.of(0.1));
     
+    //???
 
   private SparkMax pivotMotor = new SparkMax(Constants.IDConstants.PIVOT, MotorType.kBrushless);
 
@@ -96,12 +125,14 @@ public class Intake extends SubsystemBase {
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(1))
       .withMass(Pounds.of(2)) // Reis says: 2 pounds, not a lot
+    
       .withTelemetry("IntakePivot", TelemetryVerbosity.HIGH);
 
   private Arm intakePivot = new Arm(intakePivotConfig);
 
   public Intake() {
     // pivotMotor.factoryReset();
+  
   }
 
   /**
@@ -152,9 +183,15 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public Command Stow(){
+  public Command Deploy(){
     return Commands.run(() -> {
-      Stow();
+      setIntakeDeployed();
+    });
+  }
+
+   public Command Stow(){
+    return Commands.run(() -> {
+      setIntakeStow();
     });
   }
 

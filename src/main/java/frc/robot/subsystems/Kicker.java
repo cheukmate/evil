@@ -54,7 +54,7 @@ public class Kicker extends SubsystemBase {
   }
 
   /**
-   * Command to run the hopper forward while held.
+   * Command to push balls into the shooter while ran.
    */
   public Command feedCommand() {
     return kickerWheels.set(-KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0)).withName("FeedKickerBalls");
