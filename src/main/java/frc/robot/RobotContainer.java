@@ -25,7 +25,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
-
+import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 
 //import frc.robot.subsystems.Shooter3;
@@ -62,6 +62,8 @@ public class RobotContainer
 
   private final Climber climber = new Climber();
   private final Intake intake = new Intake();
+
+  private final Pivot pivot = new Pivot();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
 
@@ -183,18 +185,7 @@ public class RobotContainer
     {
     
 
-// simulation pivot commands
-     // ------------------------------------------------------------------------------------ HORRIBLE AND EVIL ---------------------------------------------------------------------
 
-    // Schedule `setVelocity` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
-    // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(10)));
-    //driverXbox.y().onTrue(shooter.setVelocity(300));
-    // Schedule `set` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // driverXbox.leftBumper().whileTrue(shooter.set(.02));
-    // driverXbox.rightBumper().whileTrue(shooter.set(-.02));
 
     }
     if (DriverStation.isTest())
@@ -210,7 +201,7 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      //ts probably does NOT work
+     
       driverXbox.leftTrigger().onTrue(new InstantCommand(() -> driveAngularVelocity.aim(FieldConstants.Hub.nearFace)));
       
       driverXbox.start().whileTrue(Commands.none());
@@ -218,21 +209,8 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
 
-    // driverXbox.x().whileTrue(shooter.setVelocity(RPM.of(1000)));
-    // driverXbox.y().whileTrue(shooter.setVelocity(RPM.of(300)));
 
-    //NOT FINAL
-    
-
-    //driverXbox.y().onTrue(shooter.setVelocity(150));
-    //driverXbox.y().onFalse(shooter.setVelocity(0));
-
-
-    //shooterclosedloop beta
-     
-    // operatorXbox.y().onTrue(shooter.setVelocity());
-    // operatorXbox.y().onFalse(shooter.Stop());
-
+// ---------------------------------------------------------------SHOOTER TEST--------------------------------------------------------------------
     operatorXbox.y().onTrue(shooter.spinUp());
     operatorXbox.y().onFalse(shooter.stop());
     //------------------------------------------------------------HOOD TEST------------------------------------------------------------------------------
@@ -240,23 +218,14 @@ public class RobotContainer
     //------------------------------------------------------------INDEXER TEST---------------------------------------------------------------------------
     operatorXbox.rightBumper().onTrue(kicker.feedCommand());
     operatorXbox.rightBumper().onFalse(kicker.stopCommand());
+  //--------------------------------------------------------------INTAKE ROLLERS---------------------------------------------------------------
      operatorXbox.b().whileTrue(intake.intakeCommand());
     operatorXbox.b().whileFalse(intake.Stop());
+   // ---------------------------------------------------------------PIVOT ---------------------------------------------------------------------
+   operatorXbox.leftBumper().onTrue(pivot.Deploy());
+   operatorXbox.leftTrigger().onTrue(pivot.Stow());
   }
 
-    // operatorXbox.b().onTrue(climber.Climb());
-    // operatorXbox.b().onFalse(climber.StopClimbing());
-
-    
- //driverXbox.y().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
- //driverXbox.x().whileFalse(new InstantCommand(()-> shooter.stopMotor()));
-
-      //pivot commands, may or may not work lol
-
-      // operatorXbox.a().onTrue(pivot.pivotToAngle(90));
-      // operatorXbox.b().onTrue(pivot.Stow());
-
-         
     
     }
    

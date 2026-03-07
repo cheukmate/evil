@@ -77,6 +77,7 @@ public class Intake extends SubsystemBase {
       // 18.0, 42)))
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
+      
       .withSoftLimit(Degrees.of(0), Degrees.of(150)) //make real number
       .withStatorCurrentLimit(Amps.of(10))
       .withClosedLoopRampRate(Seconds.of(0.1))

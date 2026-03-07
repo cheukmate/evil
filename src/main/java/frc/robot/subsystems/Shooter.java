@@ -84,40 +84,17 @@ public class Shooter extends SubsystemBase {
   public Command spinUp() {
     return setSpeed(RPM.of(2300)); // 600rpm
 
-    // return setSpeed(RotationsPerSecond.of(50));
 
-    // return run(() -> {
-    // // followerNova.follow(leaderNova.getID());
-    // // followerNova.setInverted(true);
-
-    // // leaderNova.setPercent(SHOOTER_SPEED);
-    // // followerNova.setPercent(SHOOTER_SPEED);
-
-    // // followerNova.setPercent(0.5);
-    // });
-
-    // return shooter.set(0.5);
-    // return shooter.setSpeed(RotationsPerSecond.of(500));
   }
 
   public Command stop() {
     return setSpeed(RPM.of(0));
-    // return run(() -> {
-
-    // // leaderNova.setPercent(0);
-    // // followerNova.setPercent(0);
-    // // followerNova.setPercent(0.5);
-    // });
-    // return shooter.set(0);
+   
   }
 
   public AngularVelocity getSpeed() {
     return shooter.getSpeed();
   }
-
-  // public Command set(double dutyCycle) {
-  // return shooter.set(dutyCycle);
-  // }
 
   public Command sysId() {
     return shooter.sysId(Volts.of(12), Volts.of(3).per(Second), Seconds.of(7));
