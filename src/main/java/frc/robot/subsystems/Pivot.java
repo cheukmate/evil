@@ -4,27 +4,24 @@
 
 package frc.robot.subsystems;
 
-import org.opencv.core.Mat;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkMaxAlternateEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkMaxConfigAccessor;
+
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import yams.mechanisms.config.PivotConfig;
+
 
 public class Pivot extends SubsystemBase {
   /** Creates a new Pivot. */
@@ -46,7 +43,7 @@ public class Pivot extends SubsystemBase {
   private static final double STOW_ANGLE = 0;
   private static final double INTAKE_ANGLE = 0.348; 
   // PID Control 4 maxmotion :P
-  private static final double kP = 1;
+  private static final double kP = 25;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
 
@@ -62,8 +59,6 @@ public class Pivot extends SubsystemBase {
 SparkMaxConfig globalConfig = new SparkMaxConfig();
 
   
-  
-
     globalConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     .pid(kP, kI, kD)  // TODO: TUNE TS
@@ -104,15 +99,14 @@ SparkMaxConfig globalConfig = new SparkMaxConfig();
 }
 
 public Command Stow(){
-return pivotToAngle(STOW_ANGLE);
+return runOnce(() -> pivotToAngle(STOW_ANGLE));
 
 }
 
 public Command Deploy(){
-  return pivotToAngle(INTAKE_ANGLE);
+  return runOnce(() -> pivotToAngle(INTAKE_ANGLE));
 }
 
-//no position control ^
   
   @Override
   public void periodic() {

@@ -4,12 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -17,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,9 +25,10 @@ import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 
-//import frc.robot.subsystems.Shooter3;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import limelight.networktables.LimelightTargetData;
+
+import static edu.wpi.first.units.Units.Degrees;
 
 import java.io.File;
 
@@ -40,7 +36,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import swervelib.SwerveInputStream;
-import frc.robot.FieldConstants;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -57,15 +53,14 @@ public class RobotContainer
 
   // Define Subsystems.
 
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/neo"));
+  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
-
   private final Climber climber = new Climber();
- private final Intake intake = new Intake();
-
+  private final Intake intake = new Intake();
   private final Hood hood = new Hood();
+
+  // private final Superstructure superstructure = new Superstructure(hood, intake, kicker, shooter);
  // private final Pivot pivot = new Pivot();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
@@ -178,19 +173,17 @@ public class RobotContainer
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-      shooter.setDefaultCommand(shooter.stop());
+      shooter.setDefaultCommand(shooter.stopCommand());
       
     }
 
     // :)
 
-    if (Robot.isSimulation())
-    {
-    
-
-
+    if (Robot.isSimulation()){
 
     }
+
+
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity); // Overrides drive command above!
@@ -202,34 +195,41 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
 
     } else
+    // -----------------------------------------------------------------------COMMANDS BEING SET---------------------------------------------------------
     {
+
+
+      // Driver commands 
+
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-     
-      driverXbox.leftTrigger().onTrue(new InstantCommand(() -> driveAngularVelocity.aim(FieldConstants.Hub.nearFace)));
-      
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
 
 
-// ---------------------------------------------------------------SHOOTER TEST--------------------------------------------------------------------
-    operatorXbox.y().onTrue(shooter.spinUp());
-    operatorXbox.y().onFalse(shooter.stop());
-
+// ---------------------------------------------------------------SHOOTER COMMANDS--------------------------------------------------------------------
+    
+//------------------------KICKER WHEELS----------------------//
     operatorXbox.rightBumper().onTrue(kicker.feedCommand());
     operatorXbox.rightBumper().onFalse(kicker.stopCommand());
-    //------------------------------------------------------------HOOD TEST------------------------------------------------------------------------------
 
-    //------------------------------------------------------------INDEXER TEST---------------------------------------------------------------------------
-    operatorXbox.rightBumper().onTrue(kicker.feedCommand());
-    operatorXbox.rightBumper().onFalse(kicker.stopCommand());
-  //--------------------------------------------------------------INTAKE ROLLERS---------------------------------------------------------------
-    operatorXbox.b().whileTrue(intake.intakeCommand());
-   operatorXbox.b().whileFalse(intake.Stop());
-   // ---------------------------------------------------------------PIVOT ---------------------------------------------------------------------
-   operatorXbox.leftBumper().onTrue(intake.Deploy());
-   operatorXbox.leftTrigger().onTrue(intake.Stow());
+
+
+   
+  //--------------------------------------------------------------INTAKE COMMANDS---------------------------------------------------------------
+
+  // ----------PIVOT----------//
+
+  operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
+  operatorXbox.leftBumper().whileFalse(intake.setAngleCommand(Degrees.of(0)));
+                                                                                            //---------ROLLERS---------//
+
+                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(1));
+                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(0));
+
+ 
+    
   }
 
     
@@ -244,7 +244,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
+    // Pass in the selected auto from the SmartDashboard as our desired autonomous commmand 
      return autoChooser.getSelected();
   }
 

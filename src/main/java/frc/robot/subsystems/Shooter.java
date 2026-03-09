@@ -50,13 +50,13 @@ public class Shooter extends SubsystemBase {
   private final SmartMotorControllerConfig shooterSmartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withFollowers(Pair.of(followerTalon, false)) //lowkirkenuinely dont know what the second parameter does ngl twin
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(0.00036, 0, 0) // Change twin!
-      .withFeedforward(new SimpleMotorFeedforward(0.191, 0.11858, 0.0)) // change!
+      .withClosedLoopController(0.0000, 0, 0) // Change twin! .0000036 or smth idk
+      .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015)) // 0.191, 0.11858, 0.0 
       .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
       .withMotorInverted(false)
       .withIdleMode(MotorMode.COAST)
-      .withStatorCurrentLimit(Amps.of(50));
+      .withStatorCurrentLimit(Amps.of(60));
 
   private final SmartMotorController shooterSmartMotorController = new TalonFXWrapper(leaderTalon, DCMotor.getKrakenX60(2), shooterSmartMotorControllerConfig);
 
@@ -73,32 +73,26 @@ public class Shooter extends SubsystemBase {
     
   }
 
-  public Command setSpeed(AngularVelocity speed) {
-    return shooter.setSpeed(speed);
-  }
+ public AngularVelocity getRPM() {
+        return shooter.getSpeed();
+    }
 
-  public Command setSpeedDynamic(Supplier<AngularVelocity> speedSupplier) {
-    return shooter.setSpeed(speedSupplier);
-  }
+    public Command setVelocityommand(AngularVelocity velocity) {
+        return shooter.setSpeed(velocity);
+    }
 
-  public Command spinUp() {
-    return setSpeed(RPM.of(2300)); // 600rpm
+    public void setVelocitySetpoint(AngularVelocity velocity)
+    {
+        shooter.setMechanismVelocitySetpoint(velocity);
+    }
 
+    public Command setDutyCycle(double dutyCycle) {
+        return shooter.set(dutyCycle);
+    }
 
-  }
-
-  public Command stop() {
-    return setSpeed(RPM.of(0));
-   
-  }
-
-  public AngularVelocity getSpeed() {
-    return shooter.getSpeed();
-  }
-
-  public Command sysId() {
-    return shooter.sysId(Volts.of(12), Volts.of(3).per(Second), Seconds.of(7));
-  }
+    public Command stopCommand() {
+        return shooter.set(0);
+    }
 
   @Override
   public void periodic() {
@@ -119,7 +113,7 @@ public class Shooter extends SubsystemBase {
     // Calculate tangential velocity at the edge of the wheel and convert to
     // LinearVelocity
 
-    return MetersPerSecond.of(getSpeed().in(RadiansPerSecond)
+    return MetersPerSecond.of(getRPM().in(RadiansPerSecond)
         * wheelRadius().in(Meters));
   }
 }

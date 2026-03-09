@@ -12,7 +12,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
+
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
@@ -25,8 +25,7 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,6 +47,8 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class Intake extends SubsystemBase {
 
   private static final double INTAKE_SPEED = 1;
+
+  private SparkMaxConfig sparkMaxConfig;
 
   // ThriftyNova controlling the intake roller
   private SparkFlex roller = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
@@ -71,46 +72,22 @@ public class Intake extends SubsystemBase {
 
   private FlyWheel intake = new FlyWheel(intakeConfig);
 
-  public void Config(){
   
-    final SparkMaxConfig pivotConfig = new SparkMaxConfig();
-    pivotConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(25, 0, 0)  // TODO: TUNE TS
-    .outputRange(-1, 1)
-    .maxMotion
-            .cruiseVelocity(3)
-            .maxAcceleration(0.35)
-            .allowedProfileError(1.0)
-            .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
-    pivotConfig.softLimit
-    .forwardSoftLimit(100.0)
-    .reverseSoftLimit(-5.0)
-    .forwardSoftLimitEnabled(true)
-    .reverseSoftLimitEnabled(true);
-
-    pivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    pivotMotor.getEncoder().setPosition(0);
-  }
-
   // 5:1, 5:1, 60/18 reduction
    private SmartMotorControllerConfig intakePivotSmartMotorConfig = new SmartMotorControllerConfig(this)
-      .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(25, 0, 0, DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360)) // change THis,base of 25
-      .withFeedforward(new SimpleMotorFeedforward(0, 10, 0)) // change, base of 10
-     // .withTrapezoidalProfile(RPM.of(3), RPM.of(.35)) 
-     .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
-    .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 4, 4, 2.18))) // 5, 4, 4, 2.18 (hope it works lol)
-     //.withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0 / 18.0, 42)))
-      .withMotorInverted(true)
-      .withIdleMode(MotorMode.BRAKE)
-      
-     .withSoftLimit(Degrees.of(0), Degrees.of(150)) //make real number
+    .withVendorConfig(new SparkMaxConfig())
+    .withControlMode(ControlMode.CLOSED_LOOP)
+    .withClosedLoopController(.48, 0, 0, DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360)) // change THis,base of 25
+    .withFeedforward(new SimpleMotorFeedforward(0, 10, 0)) // change, base of 10
+    .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
+    .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0/18.0))) // 5, 4, 4, 2.18 (hope it works lol)
+    .withMotorInverted(true)
+    .withIdleMode(MotorMode.BRAKE)
+    .withSoftLimit(Degrees.of(0), Degrees.of(150)) //make real number
     .withStatorCurrentLimit(Amps.of(10))
- .withClosedLoopRampRate(Seconds.of(0.1))
-      
-.withOpenLoopRampRate(Seconds.of(0.1));
+    .withClosedLoopRampRate(Seconds.of(0.3))
+    .withOpenLoopRampRate(Seconds.of(0.1));
+    
     
     //???
 
@@ -123,105 +100,39 @@ public class Intake extends SubsystemBase {
       .withSoftLimits(Degrees.of(0), Degrees.of(150)) //make real number
       .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
       .withStartingPosition(Degrees.of(0))
-      .withLength(Feet.of(1))
-      .withMass(Pounds.of(2)) // Reis says: 2 pounds, not a lot
-    
+      .withLength(Feet.of(.5))
+      .withMass(Pounds.of(10)) // Reis says: 2 pounds, not a lot
       .withTelemetry("IntakePivot", TelemetryVerbosity.HIGH);
 
   private Arm intakePivot = new Arm(intakePivotConfig);
 
   public Intake() {
-    // pivotMotor.factoryReset();
-  
   }
 
-  /**
-   * Command to run the intake while held.
-   */
-  public Command intakeCommand() {
-    return intake.set(INTAKE_SPEED);//.finallyDo(() -> rollerSmartMotorController.setDutyCycle(0)).withName("Intake.Run");
+  public Command rollerCommand(double dutyCycle) {
+    return intake.set(dutyCycle);
   }
 
-  public Command Stop(){
-    return intake.set(0);
-  }
+    public Angle getAngle() {
+        return intakePivot.getAngle();
+    }
 
-  /**
-   * Command to eject while held.
-   */
-  public Command ejectCommand() {
-    return intake.set(-INTAKE_SPEED).finallyDo(() -> rollerSmartMotorController.setDutyCycle(0)).withName("Intake.Eject");
-  }
+    public Command setAngleCommand(Angle angle) {
+        return intakePivot.setAngle(angle);
+        //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+    }
 
-  public Command setPivotAngle(Angle angle) {
-    return intakePivot.setAngle(angle).withName("IntakePivot.SetAngle");
-  }
+    public void setAngleSetpoint(Angle angle){
+        intakePivot.setMechanismPositionSetpoint(angle);
+    }
 
-  public Command rezero() {
-    return Commands.runOnce(() -> pivotMotor.getEncoder().setPosition(0), this).withName("IntakePivot.Rezero");
-  }
+    public Command setDutyCycleCommand(double dutyCycle) {
+        return intakePivot.set(dutyCycle);
+    }
 
-  /**
-   * Command to deploy intake and run roller while held.
-   * Stops roller when released.
-   */
-  public Command deployAndRollCommand() {
-    return Commands.run(() -> {
-      setIntakeDeployed();
-      //rollerSmartMotorController.setDutyCycle(INTAKE_SPEED);
-    }, this).finallyDo(() -> {
-      //rollerSmartMotorController.setDutyCycle(0);
-      setIntakeHold();
-    }).withName("Intake.DeployAndRoll");
-  }
-
-  public Command deployCommand(){
-    return Commands.run(() -> {
-      setIntakeDeployed();
-    });
-
-
-  }
-
-  public Command Deploy(){
-    return Commands.run(() -> {
-      setIntakeDeployed();
-    });
-  }
-
-   public Command Stow(){
-    return Commands.run(() -> {
-      setIntakeStow();
-    });
-  }
-
-  public Command backFeedAndRollCommand() {
-    return Commands.run(() -> {
-      setIntakeDeployed();
-      rollerSmartMotorController.setDutyCycle(-INTAKE_SPEED);
-    }, this).finallyDo(() -> {
-      rollerSmartMotorController.setDutyCycle(0);
-      setIntakeHold();
-    }).withName("Intake.BackFeedAndRoll");
-  }
-
-  private void setIntakeStow() {
-    intakePivotController.setPosition(Degrees.of(0));
-  }
-
-  private void setIntakeFeed() {
-    intakePivotController.setPosition(Degrees.of(59));
-  }
-
-
-  private void setIntakeHold() {
-    intakePivotController.setPosition(Rotations.of(0.348));
-  }
-
-  private void setIntakeDeployed() {
-    intakePivotController.setPosition(Rotations.of(0.348));// shange
-  }
-
+    public void setDutyCycleSetpoint(double dutyCycle){
+        intakePivot.setDutyCycleSetpoint(dutyCycle);
+    }
 
 
   @Override

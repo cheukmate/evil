@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import swervelib.math.Matter;
 
 /**
@@ -25,7 +28,8 @@ public final class Constants
   public static final double MAX_SPEED  = Units.feetToMeters(14.5);
 
   // intake positions
-
+  public static final Angle INTAKE_STOW_ANGLE = Degrees.of(0);
+  public static final Angle INTAKE_DEPLOY_ANGLE = Degrees.of(125);
 
   public static boolean disableHAL = false;
   

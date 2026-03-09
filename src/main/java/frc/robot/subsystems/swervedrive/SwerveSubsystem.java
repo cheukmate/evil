@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -709,7 +710,38 @@ public class SwerveSubsystem extends SubsystemBase
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
   }
+ public Command rotateToHeading(Rotation2d rotation2d) {
+        return run(
+                () -> swerveDrive.drive(
+                        new Translation2d(0, 0),
+                        swerveDrive
+                                .getSwerveController()
+                                .headingCalculate(
+                                        getHeading().getRadians(),
+                                        getHeading().getRadians() - rotation2d.getRadians()),
+                        false,
+                        true));
+    }
 
+  /**
+     * Get the distance to the hub in meters
+     *
+     * @return Distance to hub in meters.
+     */
+    public Double distanceToHub() {
+        // p = robot position, h = hub position, d = desired distance (midRange)
+        Translation2d p = getPose().getTranslation();
+        Translation2d h = FieldConstants.Hub.getHubTranslation2d();
+
+        // vector from hub to robot: v = p - h
+        Translation2d v = p.minus(h);
+
+        // distance ||v||
+        double dist = Math.hypot(v.getX(), v.getY());
+
+        SmartDashboard.putNumber("AutoShootRPM/distance/meters", dist);
+        return dist;
+    }
 
 
 }
