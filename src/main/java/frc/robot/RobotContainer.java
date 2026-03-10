@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AimAtHubCommand;
-
+import frc.robot.commands.ShootCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,13 +23,13 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
-import frc.robot.subsystems.Pivot;
+
 import frc.robot.subsystems.Shooter;
 
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import limelight.networktables.LimelightTargetData;
 
-import static edu.wpi.first.units.Units.Degrees;
+
+import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
 
@@ -175,6 +175,7 @@ public class RobotContainer
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
       shooter.setDefaultCommand(shooter.stopCommand());
+      intake.setDefaultCommand(intake.setVoltageCommand(Volts.of(0)));
       
     }
 
@@ -199,7 +200,6 @@ public class RobotContainer
     // -----------------------------------------------------------------------COMMANDS BEING SET---------------------------------------------------------
     {
 
-
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -216,14 +216,16 @@ public class RobotContainer
     operatorXbox.rightBumper().onFalse(kicker.stopCommand());
 
 
-
+                                                    //------------------------FLYWHEEL COMMAND-----------------------//
+                                                    operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
+                                                   
    
   //--------------------------------------------------------------INTAKE COMMANDS---------------------------------------------------------------
 
   // ----------PIVOT----------//
 
   operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
-  operatorXbox.leftBumper().whileFalse(intake.setAngleCommand(Degrees.of(0)));
+  operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
                                                                                             //---------ROLLERS---------//
 
                                                                           operatorXbox.b().whileTrue(intake.rollerCommand(1));

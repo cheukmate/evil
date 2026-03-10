@@ -4,11 +4,12 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import swervelib.math.Matter;
 
 /**
@@ -96,15 +97,17 @@ public final class Constants
 
   }
 
-  public static final class FieldConstants {
+  public static final class Shooter {
+    public static final AngularVelocity hubRPM = RPM.of(3000);
 
+  }
 
+  public static final class Hood {
 
-
-
-
-
-
+    public static final Angle hubAngle = Degrees.of(30); // guessing
+    public static final Angle startHoodAngle = Degrees.of(0); // well, yes
+    public static final Angle lowerHoodAngle = Degrees.of(0); // well, yes
+    public static final Angle higherHoodAngle = Degrees.of(25); // guessing
 
   }
 
