@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
+import frc.robot.field.FieldConstants;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -741,6 +741,10 @@ public class SwerveSubsystem extends SubsystemBase
 
         SmartDashboard.putNumber("AutoShootRPM/distance/meters", dist);
         return dist;
+   }
+
+       public void driveFieldOrientedSetpoint(ChassisSpeeds speeds) {
+        swerveDrive.driveFieldOriented(speeds);
     }
 
 

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.AimAtHubCommand;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -202,7 +203,7 @@ public class RobotContainer
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.leftTrigger().whileTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());

@@ -109,6 +109,10 @@ public class Shooter extends SubsystemBase {
     return Inches.of(4).div(2);
   }
 
+    public void setDutyCycleSetpoint(double dutyCycle) {
+         shooter.setDutyCycleSetpoint(0);
+    }
+
   public LinearVelocity getTangentialVelocity() {
     // Calculate tangential velocity at the edge of the wheel and convert to
     // LinearVelocity

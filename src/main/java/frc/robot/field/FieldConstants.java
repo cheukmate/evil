@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.field;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -31,8 +31,6 @@ import java.util.function.Supplier;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-
 
 /**
  * Contains information for location of field element and other useful reference
@@ -347,15 +345,14 @@ public class FieldConstants {
     }
 
     @RequiredArgsConstructor
-    private enum FieldType {
+    public enum FieldType {
         ANDYMARK("andymark"),
         WELDED("welded");
 
-        
-         @Getter private final String jsonFolder;
-        
-    }
+        @Getter
 
+        private final String jsonFolder;
+    }
 
     public enum AprilTagLayoutType {
         OFFICIAL("2026-official"),

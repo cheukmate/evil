@@ -68,36 +68,29 @@ public class Hood extends SubsystemBase {
   public Hood() {
   }
 
-  public Command setAngle(Angle angle) {
-    return hood.setAngle(angle);
-    
+   public Command setDegreeCommand(double degree) {
+    return hood.setAngle(Degrees.of(degree));
   }
 
-  public Command setAngleDynamic(Supplier<Angle> hoodAngleSupplier) {
-    
-    return hood.setAngle(hoodAngleSupplier);
-    
-  }
-
-  public Command stow() {
-    return setAngle(Degrees.of(0));
-  }
-
-  public Command max() {
-    return setAngle(Degrees.of(90));
+  public void setAngleSetpoint(Angle degree) {
+      hood.setMechanismPositionSetpoint(degree);
   }
 
   public Angle getAngle() {
     return hood.getAngle();
   }
 
-  public Command set(double dutyCycle) {
-    return Commands.runOnce(() -> {
-    });
+  public void setDutyCycleSetpoint(double dutyCycle) {
+    hood.setDutyCycleSetpoint(dutyCycle);
+  } 
+
+  public Command setDutyCycle(double dutyCycle) {
+    return hood.set(dutyCycle);
   }
 
-
-
+  public Command stopCommand(){
+    return hood.set(0);
+  }
   @Override
   public void periodic() {
     hood.updateTelemetry();
@@ -105,6 +98,7 @@ public class Hood extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-     hood.simIterate();
+    hood.simIterate();
   }
+
 }

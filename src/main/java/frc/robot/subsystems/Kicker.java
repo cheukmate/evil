@@ -60,7 +60,7 @@ public class Kicker extends SubsystemBase {
   }
 
   public Command backFeedCommand() {
-    return kickerWheels.set(-KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0)).withName("KickerReverseBalls");
+    return kickerWheels.set(KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0)).withName("KickerReverseBalls");
 
   }
 
