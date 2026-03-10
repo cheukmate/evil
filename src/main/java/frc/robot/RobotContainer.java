@@ -229,7 +229,7 @@ public class RobotContainer
                                                                                             //---------ROLLERS---------//
 
                                                                           operatorXbox.b().whileTrue(intake.rollerCommand(1));
-                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(0));
+                                                                          operatorXbox.b().whileFalse(intake.rollerCommand(0));
 
  
     
