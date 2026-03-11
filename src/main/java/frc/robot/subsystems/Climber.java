@@ -17,7 +17,9 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  SparkMax climber = new SparkMax(Constants.IDConstants.CLIMBER_ID, MotorType.kBrushless);
+  SparkMax climber = new SparkMax(Constants.IDConstants.CLIMBER_ID_MAIN, MotorType.kBrushless);
+  SparkMax climber2 = new SparkMax(Constants.IDConstants.CLIMBER_ID_SECONDARY, MotorType.kBrushless);
+
  private SparkMaxConfig config = new SparkMaxConfig();
   public Climber() {
     configureClimber();
@@ -30,19 +32,69 @@ public class Climber extends SubsystemBase {
 
   climber.configure(config, ResetMode.kResetSafeParameters
   , PersistMode.kPersistParameters);
+  climber2.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
  }
 
-  public void climbVoid(double speed){
+  public void climbLeft(double speed){
 
     climber.set(speed);
 
   }
 
-  public Command Climb(){
+  public void climbRight(double speed){
+
+    climber2.set(speed);
+  }
+
+
+  public void unclimbLeft(double speed){
+
+    climber.set(-speed);
+
+  }
+
+  public void unclimbRight(double speed){
+
+    climber2.set(-speed);
+  }
+
+  public void stopClimbing(double speed){
+    climber.set(0);
+    climber2.set(0);
+  }
+
+  public Command ClimbLeft(){
     return run(() -> {
 
-    climbVoid(.4);
+    climbLeft(.6);
+    
+    });
+
+  }
+  
+  public Command ClimbRight(){
+    return run(() -> {
+
+    climbRight(.6);
+    
+    });
+
+  }
+
+  public Command unClimbLeft(){
+    return run(() -> {
+
+    unclimbLeft(.6);
+    
+    });
+
+  }
+  
+  public Command unClimbRight(){
+    return run(() -> {
+
+    unclimbRight(.6);
     
     });
 
@@ -51,7 +103,7 @@ public class Climber extends SubsystemBase {
    public Command StopClimbing(){
     return run(() -> {
 
-    climbVoid(0);
+    stopClimbing(0);
     
     });
 

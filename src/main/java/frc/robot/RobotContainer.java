@@ -176,6 +176,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
       shooter.setDefaultCommand(shooter.stopCommand());
       intake.setDefaultCommand(intake.setVoltageCommand(Volts.of(0)));
+      climber.setDefaultCommand(climber.StopClimbing());
       
     }
 
@@ -203,10 +204,20 @@ public class RobotContainer
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.leftTrigger().whileTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      
+      // Climb
+
+      driverXbox.leftTrigger().onTrue(climber.ClimbLeft());
+      driverXbox.rightTrigger().onTrue(climber.ClimbRight());
+
+      driverXbox.leftBumper().onTrue(climber.unClimbLeft());
+      driverXbox.rightBumper().onTrue(climber.unClimbRight());
+
+      driverXbox.leftTrigger().onFalse(climber.StopClimbing());
+      driverXbox.rightTrigger().onFalse(climber.StopClimbing());
+
+      driverXbox.leftBumper().onFalse(climber.StopClimbing());
+      driverXbox.rightBumper().onFalse(climber.StopClimbing());
 
 
 // ---------------------------------------------------------------SHOOTER COMMANDS--------------------------------------------------------------------
@@ -218,18 +229,35 @@ public class RobotContainer
 
                                                     //------------------------FLYWHEEL COMMAND-----------------------//
                                                     operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
-                                                   
+
+                                                    operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2000)));
+                                                    operatorXbox.povDown().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
+                                                    operatorXbox.povLeft().whileTrue(shooter.setVelocityCommand(RPM.of(4000)));
+
    
+                                                      operatorXbox.povUp().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
+
   //--------------------------------------------------------------INTAKE COMMANDS---------------------------------------------------------------
 
   // ----------PIVOT----------//
 
-  operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
-  operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
+  //operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
+  //operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
+
+// sad backups
+operatorXbox.leftTrigger().whileTrue(intake.setPower(.5));
+operatorXbox.leftBumper().whileTrue(intake.setPower(-.5));
                                                                                             //---------ROLLERS---------//
 
                                                                           operatorXbox.b().whileTrue(intake.rollerCommand(1));
                                                                           operatorXbox.b().whileFalse(intake.rollerCommand(0));
+
+
+// manual hood
+
+operatorXbox.x().whileTrue(hood.setDegreeCommand(5));
 
  
     

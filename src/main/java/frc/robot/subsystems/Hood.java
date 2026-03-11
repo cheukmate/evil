@@ -47,7 +47,7 @@ public class Hood extends SubsystemBase {
    .withFeedforward(new ArmFeedforward(0, 0.3, 0.1))
    .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
    .withGearing(new MechanismGearing(GearBox.fromReductionStages(50)))
-   .withMotorInverted(false)
+   .withMotorInverted(true)
    .withIdleMode(MotorMode.BRAKE)
    .withSoftLimit(Degrees.of(0), Degrees.of(90))
    .withStatorCurrentLimit(Amps.of(40))

@@ -50,8 +50,8 @@ public class ShootCommand extends Command {
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE
             new RecordedShot(Meters.of(1), RPM.of(1000), Degrees.of(0), Second.of(1)),
-            new RecordedShot(Meters.of(2), RPM.of(2000), Degrees.of(20),Second.of(1)),
-            new RecordedShot(Meters.of(3), RPM.of(3000), Degrees.of(40),Second.of(1))
+            new RecordedShot(Meters.of(2), RPM.of(2000), Degrees.of(0),Second.of(1)),
+            new RecordedShot(Meters.of(3), RPM.of(3000), Degrees.of(0),Second.of(1))
 
     );
     private final InterpolatingDoubleTreeMap calculatedGoalRPM = new InterpolatingDoubleTreeMap();
