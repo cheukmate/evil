@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Climber;
+//import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
@@ -57,7 +57,7 @@ public class RobotContainer
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
-  private final Climber climber = new Climber();
+  //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
 
@@ -136,6 +136,11 @@ public class RobotContainer
 
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
 
+    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5));
+    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(1));
+    NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2000)));
+    NamedCommands.registerCommand("KickBalls", kicker.feedCommand());
+
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -145,6 +150,7 @@ public class RobotContainer
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
 
+    
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
     
@@ -176,7 +182,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
       shooter.setDefaultCommand(shooter.stopCommand());
       intake.setDefaultCommand(intake.setVoltageCommand(Volts.of(0)));
-      climber.setDefaultCommand(climber.StopClimbing());
+      //climber.setDefaultCommand(climber.StopClimbing());
       
     }
 
@@ -207,17 +213,17 @@ public class RobotContainer
       
       // Climb
 
-      driverXbox.leftTrigger().onTrue(climber.ClimbLeft());
-      driverXbox.rightTrigger().onTrue(climber.ClimbRight());
+      // driverXbox.leftTrigger().onTrue(climber.ClimbLeft());
+      // driverXbox.rightTrigger().onTrue(climber.ClimbRight());
 
-      driverXbox.leftBumper().onTrue(climber.unClimbLeft());
-      driverXbox.rightBumper().onTrue(climber.unClimbRight());
+      // driverXbox.leftBumper().onTrue(climber.unClimbLeft());
+      // driverXbox.rightBumper().onTrue(climber.unClimbRight());
 
-      driverXbox.leftTrigger().onFalse(climber.StopClimbing());
-      driverXbox.rightTrigger().onFalse(climber.StopClimbing());
+      // driverXbox.leftTrigger().onFalse(climber.StopClimbing());
+      // driverXbox.rightTrigger().onFalse(climber.StopClimbing());
 
-      driverXbox.leftBumper().onFalse(climber.StopClimbing());
-      driverXbox.rightBumper().onFalse(climber.StopClimbing());
+      // driverXbox.leftBumper().onFalse(climber.StopClimbing());
+      // driverXbox.rightBumper().onFalse(climber.StopClimbing());
 
 
 // ---------------------------------------------------------------SHOOTER COMMANDS--------------------------------------------------------------------
@@ -228,14 +234,14 @@ public class RobotContainer
 
 
                                                     //------------------------FLYWHEEL COMMAND-----------------------//
-                                                    operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
-
-                                                    operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2000)));
+                                                    //operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
+                                                    operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2200)));
+                                                    //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
                                                     operatorXbox.povDown().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
                                                     operatorXbox.povLeft().whileTrue(shooter.setVelocityCommand(RPM.of(4000)));
 
    
-                                                      operatorXbox.povUp().whileFalse(shooter.setDutyCycle(0));
+                                                      operatorXbox.rightTrigger().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
 

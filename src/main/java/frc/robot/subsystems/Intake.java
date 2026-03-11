@@ -101,7 +101,7 @@ public class Intake extends SubsystemBase {
       intakePivotSmartMotorConfig);
 
   private final ArmConfig intakePivotConfig = new ArmConfig(intakePivotController)
-      //.withSoftLimits(Degrees.of(0), Degrees.of(150)) //make real number
+      .withSoftLimits(Degrees.of(0), Degrees.of(170)) //make real number
       .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))

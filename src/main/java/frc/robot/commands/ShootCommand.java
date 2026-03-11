@@ -102,9 +102,9 @@ public class ShootCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         shooter.setVelocitySetpoint(goalRPM);
-        if (swerve.isEmpty()) {
-            hood.setAngleSetpoint(goalDegree);
-        }
+        // if (swerve.isEmpty()) {
+        //     hood.setAngleSetpoint(goalDegree);
+        // }
         
         
     }
@@ -116,11 +116,11 @@ public class ShootCommand extends Command {
         Angle goalDegree1 = goalDegree;
         if (swerve.isPresent()) {
             goalRPM1 = RPM.of(calculatedGoalRPM.get(swerve.get().distanceToHub()));
-            goalDegree1 = Degrees.of(calculatedHoodAngle.get(swerve.get().distanceToHub()));
+            //goalDegree1 = Degrees.of(calculatedHoodAngle.get(swerve.get().distanceToHub()));
         }
 
         shooter.setVelocitySetpoint(goalRPM1);
-        hood.setAngleSetpoint(goalDegree1);
+        //hood.setAngleSetpoint(goalDegree1);
 
         AngularVelocity shooterRPM = shooter.getRPM();
 
@@ -146,7 +146,7 @@ public class ShootCommand extends Command {
     public void end(boolean interrupted) {
         shooter.setDutyCycleSetpoint(0);
         kicker.stopCommand();
-        hood.setDutyCycleSetpoint(0);
+       // hood.setDutyCycleSetpoint(0);
 
     }
 
