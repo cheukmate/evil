@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withClosedLoopController(0.00036, 0, 0) // Change twin! .0000036 or smth idk
       .withFeedforward(new SimpleMotorFeedforward(0.191, 0.11858, 0.0)) // 0.191, 0.11858, 0.0 
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      .withTelemetry("ShooterMotor", TelemetryVerbosity.LOW)
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
       .withMotorInverted(false)
       .withIdleMode(MotorMode.COAST)
@@ -65,7 +65,7 @@ public class Shooter extends SubsystemBase {
       .withMass(Pounds.of(1))
       .withUpperSoftLimit(RPM.of(6000))
       .withLowerSoftLimit(RPM.of(0))
-      .withTelemetry("Shooter", TelemetryVerbosity.HIGH);
+      .withTelemetry("Shooter", TelemetryVerbosity.LOW);
 
   private final FlyWheel shooter = new FlyWheel(shooterConfig);
 

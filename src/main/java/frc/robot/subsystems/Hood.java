@@ -45,7 +45,7 @@ public class Hood extends SubsystemBase {
    .withClosedLoopController(100, 0, 0, DegreesPerSecond.of(90),
    DegreesPerSecondPerSecond.of(90))
    .withFeedforward(new ArmFeedforward(0, 0.3, 0.1))
-   .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
+   .withTelemetry("HoodMotor", TelemetryVerbosity.LOW)
    .withGearing(new MechanismGearing(GearBox.fromReductionStages(50)))
    .withMotorInverted(true)
    .withIdleMode(MotorMode.BRAKE)
@@ -61,7 +61,7 @@ public class Hood extends SubsystemBase {
   .withHardLimit(Degrees.of(-5), Degrees.of(95))
   .withStartingPosition(Degrees.of(0))
   .withMOI(0.001)
-  .withTelemetry("Hood", TelemetryVerbosity.HIGH);
+  .withTelemetry("Hood", TelemetryVerbosity.LOW);
 
    private yams.mechanisms.positional.Pivot hood = new Pivot(hoodConfig);
 

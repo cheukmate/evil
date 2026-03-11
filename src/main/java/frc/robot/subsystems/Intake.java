@@ -83,7 +83,7 @@ public class Intake extends SubsystemBase {
     .withControlMode(ControlMode.OPEN_LOOP)
     //.withClosedLoopController(1, 0, 0, DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360)) // change THis,base of 25
     .withFeedforward(new SimpleMotorFeedforward(0, 10, 0)) // change, base of 10
-    .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
+    .withTelemetry("IntakePivotMotor", TelemetryVerbosity.LOW)
     .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0/18.0))) // 5, 4, 4, 2.18 (hope it works lol)
     .withMotorInverted(true)
     .withIdleMode(MotorMode.BRAKE)
@@ -106,7 +106,7 @@ public class Intake extends SubsystemBase {
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))
       .withMass(Pounds.of(10)) // Reis says: 2 pounds, not a lot
-      .withTelemetry("IntakePivot", TelemetryVerbosity.HIGH);
+      .withTelemetry("IntakePivot", TelemetryVerbosity.LOW);
 
   private Arm intakePivot = new Arm(intakePivotConfig);
 
