@@ -47,7 +47,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class Intake extends SubsystemBase {
 
-  private static final double INTAKE_SPEED = 1;
+  private static final double INTAKE_SPEED = .5;
 
   private SparkMaxConfig sparkMaxConfig;
 
@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase {
 
   private SmartMotorControllerConfig rollerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
-
+      .withFollowers(Pair.of(roller2, true))
       .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.LOW)
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(1))) // Direct drive, adjust if geared
       .withMotorInverted(false) 
@@ -101,7 +101,8 @@ public class Intake extends SubsystemBase {
       intakePivotSmartMotorConfig);
 
   private final ArmConfig intakePivotConfig = new ArmConfig(intakePivotController)
-      .withSoftLimits(Degrees.of(0), Degrees.of(170)) //make real number
+  
+      .withSoftLimits(Degrees.of(0), Degrees.of(240)) //make real number
       .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))

@@ -112,9 +112,9 @@ public class SwerveSubsystem extends SubsystemBase
 
 
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
-    swerveDrive.setCosineCompensator(false);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    swerveDrive.setCosineCompensator(true);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     swerveDrive.setAngularVelocityCompensation(false,
-                                               true,
+                                               false,
                                                0.3); //Correct for skew that gets worse as angular velocity increases. Start with a coefficient of 0.1.
     swerveDrive.setModuleEncoderAutoSynchronize(true,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
@@ -147,6 +147,8 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    swerveDrive.updateOdometry();
+
     limelight
         .getSettings()
         .withRobotOrientation(
@@ -236,7 +238,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupLimelight()
   {
      swerveDrive.stopOdometryThread();
-    limelight = new Limelight("limelight");
+    limelight = new Limelight("limelight-cowtown");
     limelight
         .getSettings()
         .withPipelineIndex(0)
@@ -644,9 +646,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(5.0, 0.0, 0.0), // 5.0 basic 
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(0.4, 0.0, 0.0) //5.0 basic
               // Rotation PID constants
           ),
           config,

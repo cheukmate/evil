@@ -136,10 +136,11 @@ public class RobotContainer
 
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
 
-    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5));
-    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(1));
-    NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2000)));
-    NamedCommands.registerCommand("KickBalls", kicker.feedCommand());
+    
+    NamedCommands.registerCommand("IntakeBalls", Commands.runOnce(() -> intake.rollerCommand(1).withTimeout(Seconds.of(3))));
+    NamedCommands.registerCommand("RevShooter", Commands.runOnce(()-> shooter.setVelocityCommand(RPM.of(2000)).withTimeout(Seconds.of(3))));
+    NamedCommands.registerCommand("KickBalls", Commands.runOnce(() -> kicker.feedCommand().withTimeout(Seconds.of(5))));
+    NamedCommands.registerCommand("DeployIntake", Commands.runOnce(() -> intake.setPower(.5).withTimeout(Seconds.of(5))));
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -235,13 +236,17 @@ public class RobotContainer
 
                                                     //------------------------FLYWHEEL COMMAND-----------------------//
                                                     //operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
-                                                    operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2200)));
+                                                    operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2500)));
+                                                    operatorXbox.leftTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
                                                     //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
-                                                    operatorXbox.povDown().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
-                                                    operatorXbox.povLeft().whileTrue(shooter.setVelocityCommand(RPM.of(4000)));
+                                                    operatorXbox.povRight().whileTrue(hood.setDegreeCommand(10));
+                                                    operatorXbox.povLeft().whileTrue(hood.setDegreeCommand(0));
+
+                                                   
 
    
-                                                      operatorXbox.rightTrigger().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.rightTrigger().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.leftTrigger().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
 
@@ -253,8 +258,8 @@ public class RobotContainer
   //operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
 
 // sad backups
-operatorXbox.leftTrigger().whileTrue(intake.setPower(.5));
-operatorXbox.leftBumper().whileTrue(intake.setPower(-.5));
+operatorXbox.leftTrigger().whileTrue(intake.setPower(.7));
+operatorXbox.leftBumper().whileTrue(intake.setPower(-.7));
                                                                                             //---------ROLLERS---------//
 
                                                                           operatorXbox.b().whileTrue(intake.rollerCommand(1));
