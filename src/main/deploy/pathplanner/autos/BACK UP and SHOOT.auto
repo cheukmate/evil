@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Starting line to balls 2"
+            "pathName": "back up"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RevShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "balls to tower"
+            "name": "Stop Shooting and Revving"
           }
         }
       ]

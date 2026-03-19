@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RevShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "KickBalls"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooting and Revving"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -137,10 +139,18 @@ public class RobotContainer
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
 
     
-    NamedCommands.registerCommand("IntakeBalls", Commands.runOnce(() -> intake.rollerCommand(1).withTimeout(Seconds.of(3))));
-    NamedCommands.registerCommand("RevShooter", Commands.runOnce(()-> shooter.setVelocityCommand(RPM.of(2000)).withTimeout(Seconds.of(3))));
-    NamedCommands.registerCommand("KickBalls", Commands.runOnce(() -> kicker.feedCommand().withTimeout(Seconds.of(5))));
-    NamedCommands.registerCommand("DeployIntake", Commands.runOnce(() -> intake.setPower(.5).withTimeout(Seconds.of(5))));
+    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(2));
+
+    NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
+
+    NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
+
+    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
+
+    NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
+    NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
+
+    NamedCommands.registerCommand("REVANDSHOOT",shooter.setVelocityCommand(RPM.of(2500)).andThen(new WaitCommand(3)).deadlineFor(kicker.feedCommand()));
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -183,6 +193,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
       shooter.setDefaultCommand(shooter.stopCommand());
       intake.setDefaultCommand(intake.setVoltageCommand(Volts.of(0)));
+      intake.setDefaultCommand(intake.setDutyCycleCommand(0));
       //climber.setDefaultCommand(climber.StopClimbing());
       
     }
@@ -237,7 +248,7 @@ public class RobotContainer
                                                     //------------------------FLYWHEEL COMMAND-----------------------//
                                                     //operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
                                                     operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2500)));
-                                                    operatorXbox.leftTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
+                                                    operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
                                                     //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
                                                     operatorXbox.povRight().whileTrue(hood.setDegreeCommand(10));
                                                     operatorXbox.povLeft().whileTrue(hood.setDegreeCommand(0));
@@ -249,6 +260,11 @@ public class RobotContainer
                                                     operatorXbox.leftTrigger().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
+
+                                                    //---------------------UNSTUCK COMMAND--------------//
+                                                    operatorXbox.a().onTrue(kicker.backFeedCommand().alongWith(intake.rollerCommand(-1)));
+                                                    operatorXbox.a().onFalse(kicker.stopCommand().alongWith(intake.rollerCommand(0)));
+                                                
 
   //--------------------------------------------------------------INTAKE COMMANDS---------------------------------------------------------------
 

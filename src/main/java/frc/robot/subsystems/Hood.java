@@ -93,12 +93,12 @@ public class Hood extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    hood.updateTelemetry();
+    //hood.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
-    hood.simIterate();
+    //hood.simIterate();
   }
 
 }
