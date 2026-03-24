@@ -222,20 +222,8 @@ public class RobotContainer
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      
-      // Climb
-
-      // driverXbox.leftTrigger().onTrue(climber.ClimbLeft());
-      // driverXbox.rightTrigger().onTrue(climber.ClimbRight());
-
-      // driverXbox.leftBumper().onTrue(climber.unClimbLeft());
-      // driverXbox.rightBumper().onTrue(climber.unClimbRight());
-
-      // driverXbox.leftTrigger().onFalse(climber.StopClimbing());
-      // driverXbox.rightTrigger().onFalse(climber.StopClimbing());
-
-      // driverXbox.leftBumper().onFalse(climber.StopClimbing());
-      // driverXbox.rightBumper().onFalse(climber.StopClimbing());
+      driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
+     
 
 
 // ---------------------------------------------------------------SHOOTER COMMANDS--------------------------------------------------------------------

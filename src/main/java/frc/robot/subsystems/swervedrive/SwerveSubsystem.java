@@ -145,62 +145,13 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean initialReading = false;
 
   @Override
-  public void periodic()
-  {
+  public void periodic(){
+    
     swerveDrive.updateOdometry();
 
-    limelight
-        .getSettings()
-        .withRobotOrientation(
-            new Orientation3d(
-                new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(Rotation2d.kZero)),
-                new AngularVelocity3d(
-                    DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
-                    .withAprilTagIdFilter(List.of(8, 9, 10, 11, 24, 25,26, 27))
-                    
-        .save();
-    Optional<PoseEstimate> poseEstimates = limelightPoseEstimator.getPoseEstimate();
-    Optional<LimelightResults> results = limelight.getLatestResults();
-    if (results.isPresent() /* && poseEstimates.isPresent()*/) {
-      LimelightResults result = results.get();
-      PoseEstimate poseEstimate = poseEstimates.get();
-      SmartDashboard.putNumber("Vision/Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Avg Distance", poseEstimate.avgTagDist);
-      SmartDashboard.putNumber("Vision/Avg Tag Area", poseEstimate.avgTagArea);
-      SmartDashboard.putNumber("Vision/Odom Pose/x", swerveDrive.getPose().getX());
-      SmartDashboard.putNumber("Vision/Odom Pose/y", swerveDrive.getPose().getY());
-      SmartDashboard.putNumber(
-          "Odom Pose/degrees", swerveDrive.getPose().getRotation().getDegrees());
-      SmartDashboard.putNumber("Vision/Limelight Pose/x", poseEstimate.pose.getX());
-      SmartDashboard.putNumber("Vision/Limelight Pose/y", poseEstimate.pose.getY());
-      SmartDashboard.putNumber(
-          "Vision/Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
-      if (result.valid) {
-        // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
-        Pose2d usefulPose = result.getBotPose2d(Alliance.Blue);
-        double distanceToPose =
-            usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
-        if (distanceToPose < 0.5
-            || (outofAreaReading > 10)
-            || (outofAreaReading > 10 && !initialReading)) {
-          if (!initialReading) {
-            initialReading = true;
-          }
-          outofAreaReading = 0;
-          // System.out.println(usefulPose.toString());
-          swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
-          // System.out.println(result.timestamp_LIMELIGHT_publish);
-          // System.out.println(result.timestamp_RIOFPGA_capture);
-          swerveDrive.addVisionMeasurement(usefulPose, result.timestamp_RIOFPGA_capture);
-        } else {
-          outofAreaReading += 1;
-        }
-      swerveDrive.updateOdometry();
-      }
-    } 
   }
+      
+
 
   @Override
   public void simulationPeriodic()
