@@ -223,6 +223,7 @@ public class RobotContainer
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
+      driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
      
 
 
