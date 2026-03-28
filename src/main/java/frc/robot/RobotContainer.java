@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 //import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Hood;
+//import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
 
@@ -61,7 +61,7 @@ public class RobotContainer
   private final Kicker kicker = new Kicker();
   //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
-  private final Hood hood = new Hood();
+
 
   // private final Superstructure superstructure = new Superstructure(hood, intake, kicker, shooter);
  // private final Pivot pivot = new Pivot();
@@ -224,6 +224,7 @@ public class RobotContainer
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
       driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
+      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase));
      
 
 
@@ -239,8 +240,7 @@ public class RobotContainer
                                                     operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2500)));
                                                     operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
                                                     //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
-                                                    operatorXbox.povRight().whileTrue(hood.setDegreeCommand(10));
-                                                    operatorXbox.povLeft().whileTrue(hood.setDegreeCommand(0));
+                                                   
 
                                                    
 
@@ -271,9 +271,9 @@ operatorXbox.leftBumper().whileTrue(intake.setPower(-.7));
                                                                           operatorXbox.b().whileFalse(intake.rollerCommand(0));
 
 
-// manual hood
 
-operatorXbox.x().whileTrue(hood.setDegreeCommand(5));
+
+
 
  
     

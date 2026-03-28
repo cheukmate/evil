@@ -1,13 +1,11 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.Pair;
@@ -17,18 +15,17 @@ import edu.wpi.first.math.system.plant.DCMotor;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+
 import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
+
 import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import yams.gearing.GearBox;
@@ -47,13 +44,15 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class Intake extends SubsystemBase {
 
-  private static final double INTAKE_SPEED = .5;
 
-  private SparkMaxConfig sparkMaxConfig;
 
-  // ThriftyNova controlling the intake roller
+
+  // SparkFlexes controlling the intake roller
   private SparkFlex roller = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
   private SparkFlex roller2 = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
+  // SparkMaxes for the bring-in thingy
+  private SparkMax pivotMotor = new SparkMax(Constants.IDConstants.PIVOT1, MotorType.kBrushless);
+  private SparkMax pivotMotor2 = new SparkMax(Constants.IDConstants.PIVOT2, MotorType.kBrushless);
 
   private SmartMotorControllerConfig rollerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
@@ -82,6 +81,7 @@ public class Intake extends SubsystemBase {
     
     .withControlMode(ControlMode.OPEN_LOOP)
     //.withClosedLoopController(1, 0, 0, DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360)) // change THis,base of 25
+    .withFollowers(Pair.of(pivotMotor2, false))
     .withFeedforward(new SimpleMotorFeedforward(0, 10, 0)) // change, base of 10
     .withTelemetry("IntakePivotMotor", TelemetryVerbosity.LOW)
     .withGearing(new MechanismGearing(GearBox.fromReductionStages(5, 5, 60.0/18.0))) // 5, 4, 4, 2.18 (hope it works lol)
@@ -95,7 +95,7 @@ public class Intake extends SubsystemBase {
     
     //???
 
-  private SparkMax pivotMotor = new SparkMax(Constants.IDConstants.PIVOT, MotorType.kBrushless);
+
 
   private SmartMotorController intakePivotController = new SparkWrapper(pivotMotor, DCMotor.getNEO(1),
       intakePivotSmartMotorConfig);

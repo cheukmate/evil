@@ -24,7 +24,7 @@ import edu.wpi.first.units.measure.Time;
 
 public class ShootCommand extends Command {
 
-    private record RecordedShot(Distance distance, AngularVelocity shooterSpeed, Angle hoodAngle, Time tof) {
+    private record RecordedShot(Distance distance, AngularVelocity shooterSpeed, Time tof) {
         public Pair<Double, Double> getRPM() {
             return Pair.of(distance.in(Meters), shooterSpeed.in(RPM));
         }
@@ -33,15 +33,11 @@ public class ShootCommand extends Command {
             return Pair.of(distance.in(Meters), tof.in(Second));
         }
 
-        public Pair<Double, Double> getHoodAngle() {
-            return Pair.of(distance.in(Meters), hoodAngle.in(Degrees));
-        }
     }
 
     private final Shooter shooter;
     private final Kicker kicker;
     private final Optional<SwerveSubsystem> swerve;
-    private final Hood hood;//94 rpm
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     private final Angle goalDegree;
 
@@ -49,41 +45,41 @@ public class ShootCommand extends Command {
 
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE
-            new RecordedShot(Meters.of(1), RPM.of(1000), Degrees.of(0), Second.of(1)),
-            new RecordedShot(Meters.of(2), RPM.of(2000), Degrees.of(0),Second.of(1)),
-            new RecordedShot(Meters.of(3), RPM.of(3000), Degrees.of(0),Second.of(1))
+            new RecordedShot(Meters.of(1.25), RPM.of(1000), Second.of(1)),
+            new RecordedShot(Meters.of(1.75), RPM.of(2000),Second.of(1)),
+            new RecordedShot(Meters.of(2), RPM.of(2500),Second.of(1))
 
     );
     private final InterpolatingDoubleTreeMap calculatedGoalRPM = new InterpolatingDoubleTreeMap();
     private final InterpolatingDoubleTreeMap calculatedTOF = new InterpolatingDoubleTreeMap();
-    private final InterpolatingDoubleTreeMap calculatedHoodAngle = new InterpolatingDoubleTreeMap();
+   
 
     public ShootCommand(
             Shooter shooter,
             Kicker kicker,
-            Hood hood,
+           
             AngularVelocity goalRPM1,
             Angle goalDegree1   // <-- parameter passed in
     ) {
         this.shooter = shooter;
         this.kicker = kicker;
-        this.hood = hood;
+     
         this.swerve = Optional.empty();
         
         this.goalRPM = goalRPM1;   // <-- store parameter
         this.goalDegree = goalDegree1;
 
-        addRequirements(this.shooter, this.kicker, this.hood);
+        addRequirements(this.shooter, this.kicker);
     }
 
     public ShootCommand(
             Shooter shooter,
             Kicker kicker,
-            Hood hood,
+            
             SwerveSubsystem swerve) {
         this.shooter = shooter;
         this.kicker = kicker;
-        this.hood = hood;
+        
         this.swerve = Optional.of(swerve);
         goalRPM = RPM.zero();
         goalDegree = Degrees.zero();
@@ -91,9 +87,9 @@ public class ShootCommand extends Command {
         for (var shot : shots) {
             calculatedGoalRPM.put(shot.distance.in(Meters), shot.shooterSpeed.in(RPM));
             calculatedTOF.put(shot.distance.in(Meters), shot.tof.in(Second));
-            calculatedHoodAngle.put(shot.distance.in(Meters), shot.hoodAngle.in(Degrees));
+           
         }
-        addRequirements(this.shooter, this.kicker, this.hood);
+        addRequirements(this.shooter, this.kicker);
     }
 
     
@@ -127,7 +123,7 @@ public class ShootCommand extends Command {
         boolean shooterReady = shootDebounce1.calculate(
                 shooterRPM.isNear(
                         goalRPM1,
-                        RPM.of(100)// tolerance
+                        RPM.of(300)// tolerance
                 )
 
         );

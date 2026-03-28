@@ -102,7 +102,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-   // shooter.simIterate();
+   shooter.simIterate();
   }
 
   private Distance wheelRadius() {
