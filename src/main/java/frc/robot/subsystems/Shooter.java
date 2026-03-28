@@ -50,9 +50,9 @@ public class Shooter extends SubsystemBase {
   private final SmartMotorControllerConfig shooterSmartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withFollowers(Pair.of(followerTalon, false)) //lowkirkenuinely dont know what the second parameter does ngl twin
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(0.0000, 0, 0) // Change twin! .0000036 or smth idk
-      .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015)) // 0.191, 0.11858, 0.0 
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      .withClosedLoopController(0.00036, 0, 0) // Change twin! .0000036 or smth idk
+      .withFeedforward(new SimpleMotorFeedforward(0.191, 0.11858, 0.0)) // 0.191, 0.11858, 0.0 
+      .withTelemetry("ShooterMotor", TelemetryVerbosity.LOW)
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
       .withMotorInverted(false)
       .withIdleMode(MotorMode.COAST)
@@ -65,7 +65,7 @@ public class Shooter extends SubsystemBase {
       .withMass(Pounds.of(1))
       .withUpperSoftLimit(RPM.of(6000))
       .withLowerSoftLimit(RPM.of(0))
-      .withTelemetry("Shooter", TelemetryVerbosity.HIGH);
+      .withTelemetry("Shooter", TelemetryVerbosity.LOW);
 
   private final FlyWheel shooter = new FlyWheel(shooterConfig);
 
@@ -77,7 +77,7 @@ public class Shooter extends SubsystemBase {
         return shooter.getSpeed();
     }
 
-    public Command setVelocityommand(AngularVelocity velocity) {
+    public Command setVelocityCommand(AngularVelocity velocity) {
         return shooter.setSpeed(velocity);
     }
 
@@ -96,13 +96,13 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shooter/LeaderVelocity", leaderTalon.getVelocity().getValueAsDouble());
-    SmartDashboard.putNumber("Shooter/FollowerVelocity", followerTalon.getVelocity().getValueAsDouble());
+    //SmartDashboard.putNumber("Shooter/LeaderVelocity", leaderTalon.getVelocity().getValueAsDouble());
+    //SmartDashboard.putNumber("Shooter/FollowerVelocity", followerTalon.getVelocity().getValueAsDouble());
   }
 
   @Override
   public void simulationPeriodic() {
-    shooter.simIterate();
+   shooter.simIterate();
   }
 
   private Distance wheelRadius() {

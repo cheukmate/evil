@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4835062611806795,
-        "y": 0.7655813953488371
+        "x": 3.5646332737030413,
+        "y": 4.07556350626118
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1660002564378935,
-        "y": 0.7676522870573385
+        "x": 3.98469253083806,
+        "y": 4.083797186084057
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.4655813953488368,
-        "y": 0.7655813953488371
+        "x": 2.3315026833631483,
+        "y": 4.07556350626118
       },
       "prevControl": {
-        "x": 0.14822685887731768,
-        "y": 0.7634359084285243
+        "x": 1.9724062908676656,
+        "y": 4.071142710111414
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,26 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "RevShooter",
+      "waypointRelativePos": 0.17627118644067796,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "KickBalls",
+      "waypointRelativePos": 0.7254237288135593,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "Stop Shooting and Revving",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.9091524329963079
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
@@ -50,5 +69,5 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

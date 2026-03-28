@@ -32,6 +32,15 @@ public class Dashboard {
         SmartDashboard.putData("Dashboard/Field", field);
     }
 
+    public static void hubActive(){
+        
+    }
+
+    public static void MatchTimer(){
+        double matchTime = DriverStation.getMatchTime();
+        SmartDashboard.putNumber("Timer", matchTime);
+    }
+
     public static Field2d getField2d() {
         return field;
     }
@@ -80,6 +89,7 @@ public class Dashboard {
             // 30 seconds until game ends
             matchPhaseChangePublisher.set(matchTime);
         }
+        
     }
 
     public static void isHubActive() {

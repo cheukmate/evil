@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -112,9 +113,9 @@ public class SwerveSubsystem extends SubsystemBase
 
 
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
-    swerveDrive.setCosineCompensator(false);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
+    swerveDrive.setCosineCompensator(true);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     swerveDrive.setAngularVelocityCompensation(false,
-                                               true,
+                                               false,
                                                0.3); //Correct for skew that gets worse as angular velocity increases. Start with a coefficient of 0.1.
     swerveDrive.setModuleEncoderAutoSynchronize(true,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
@@ -145,60 +146,14 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean initialReading = false;
 
   @Override
-  public void periodic()
-  {
-    limelight
-        .getSettings()
-        .withRobotOrientation(
-            new Orientation3d(
-                new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(Rotation2d.kZero)),
-                new AngularVelocity3d(
-                    DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
-                    .withAprilTagIdFilter(List.of(8, 9, 10, 11, 24, 25,26, 27))
-                    
-        .save();
-    Optional<PoseEstimate> poseEstimates = limelightPoseEstimator.getPoseEstimate();
-    Optional<LimelightResults> results = limelight.getLatestResults();
-    if (results.isPresent() /* && poseEstimates.isPresent()*/) {
-      LimelightResults result = results.get();
-      PoseEstimate poseEstimate = poseEstimates.get();
-      SmartDashboard.putNumber("Vision/Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
-      SmartDashboard.putNumber("Vision/Avg Distance", poseEstimate.avgTagDist);
-      SmartDashboard.putNumber("Vision/Avg Tag Area", poseEstimate.avgTagArea);
-      SmartDashboard.putNumber("Vision/Odom Pose/x", swerveDrive.getPose().getX());
-      SmartDashboard.putNumber("Vision/Odom Pose/y", swerveDrive.getPose().getY());
-      SmartDashboard.putNumber(
-          "Odom Pose/degrees", swerveDrive.getPose().getRotation().getDegrees());
-      SmartDashboard.putNumber("Vision/Limelight Pose/x", poseEstimate.pose.getX());
-      SmartDashboard.putNumber("Vision/Limelight Pose/y", poseEstimate.pose.getY());
-      SmartDashboard.putNumber(
-          "Vision/Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
-      if (result.valid) {
-        // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
-        Pose2d usefulPose = result.getBotPose2d(Alliance.Blue);
-        double distanceToPose =
-            usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
-        if (distanceToPose < 0.5
-            || (outofAreaReading > 10)
-            || (outofAreaReading > 10 && !initialReading)) {
-          if (!initialReading) {
-            initialReading = true;
-          }
-          outofAreaReading = 0;
-          // System.out.println(usefulPose.toString());
-          swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
-          // System.out.println(result.timestamp_LIMELIGHT_publish);
-          // System.out.println(result.timestamp_RIOFPGA_capture);
-          swerveDrive.addVisionMeasurement(usefulPose, result.timestamp_RIOFPGA_capture);
-        } else {
-          outofAreaReading += 1;
-        }
-      swerveDrive.updateOdometry();
-      }
-    } 
+  public void periodic(){
+    
+    swerveDrive.addVisionMeasurement(getPose(), Timer.getFPGATimestamp());
+    swerveDrive.updateOdometry();
+
   }
+      
+
 
   @Override
   public void simulationPeriodic()
@@ -236,7 +191,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupLimelight()
   {
      swerveDrive.stopOdometryThread();
-    limelight = new Limelight("limelight");
+    limelight = new Limelight("limelight-cowtown");
     limelight
         .getSettings()
         .withPipelineIndex(0)
@@ -644,9 +599,9 @@ public class SwerveSubsystem extends SubsystemBase
           // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
           new PPHolonomicDriveController(
               // PPHolonomicController is the built in path following controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0),
+              new PIDConstants(5.0, 0.0, 0.0), // 5.0 basic 
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(0.31, 0.0, 0.0) //5.0 basic
               // Rotation PID constants
           ),
           config,

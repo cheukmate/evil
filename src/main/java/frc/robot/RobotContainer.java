@@ -13,14 +13,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Hood;
+//import frc.robot.subsystems.Climber;
+//import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
 
@@ -57,9 +59,9 @@ public class RobotContainer
    final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
-  private final Climber climber = new Climber();
+  //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
-  private final Hood hood = new Hood();
+
 
   // private final Superstructure superstructure = new Superstructure(hood, intake, kicker, shooter);
  // private final Pivot pivot = new Pivot();
@@ -136,6 +138,20 @@ public class RobotContainer
 
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
 
+    
+    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(2));
+
+    NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
+
+    NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
+
+    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
+
+    NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
+    NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
+
+    NamedCommands.registerCommand("REVANDSHOOT",shooter.setVelocityCommand(RPM.of(2500)).andThen(new WaitCommand(3)).deadlineFor(kicker.feedCommand()));
+
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -145,6 +161,7 @@ public class RobotContainer
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
 
+    
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
     
@@ -176,6 +193,8 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
       shooter.setDefaultCommand(shooter.stopCommand());
       intake.setDefaultCommand(intake.setVoltageCommand(Volts.of(0)));
+      intake.setDefaultCommand(intake.setDutyCycleCommand(0));
+      //climber.setDefaultCommand(climber.StopClimbing());
       
     }
 
@@ -203,10 +222,10 @@ public class RobotContainer
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.leftTrigger().whileTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
+      driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
+      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase));
+     
 
 
 // ---------------------------------------------------------------SHOOTER COMMANDS--------------------------------------------------------------------
@@ -217,19 +236,44 @@ public class RobotContainer
 
 
                                                     //------------------------FLYWHEEL COMMAND-----------------------//
-                                                    operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
+                                                    //operatorXbox.rightTrigger().whileTrue(new ShootCommand(shooter, kicker, hood,  Constants.Shooter.hubRPM, Constants.Hood.hubAngle));
+                                                    operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2500)));
+                                                    operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
+                                                    //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
                                                    
+
+                                                   
+
    
+                                                    operatorXbox.rightTrigger().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.leftTrigger().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
+                                                    operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
+
+                                                    //---------------------UNSTUCK COMMAND--------------//
+                                                    operatorXbox.a().onTrue(kicker.backFeedCommand().alongWith(intake.rollerCommand(-1)));
+                                                    operatorXbox.a().onFalse(kicker.stopCommand().alongWith(intake.rollerCommand(0)));
+                                                
+
   //--------------------------------------------------------------INTAKE COMMANDS---------------------------------------------------------------
 
   // ----------PIVOT----------//
 
-  operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
-  operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
+  //operatorXbox.leftTrigger().whileTrue(intake.setAngleCommand(Degrees.of(125)));
+  //operatorXbox.leftBumper().whileTrue(intake.setAngleCommand(Degrees.of(0)));
+
+// sad backups
+operatorXbox.leftTrigger().whileTrue(intake.setPower(.7));
+operatorXbox.leftBumper().whileTrue(intake.setPower(-.7));
                                                                                             //---------ROLLERS---------//
 
                                                                           operatorXbox.b().whileTrue(intake.rollerCommand(1));
-                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(0));
+                                                                          operatorXbox.b().whileFalse(intake.rollerCommand(0));
+
+
+
+
+
 
  
     

@@ -84,15 +84,18 @@ public final class Constants
 
     // Intake ID Constants
 
-    public static final int PIVOT = 34;
+    public static final int PIVOT1 = 34;
+    public static final int PIVOT2 = 35;
 
+    public static final int INTAKEWHEELS_FLEX_FOLLOWER = 17;
     public static final int INTAKEWHEELS_FLEX_MAIN = 18;
 
 
 
     // Climber ID Constants
 
-    public static final int CLIMBER_ID = 19;
+    public static final int CLIMBER_ID_MAIN = 19;
+    public static final int CLIMBER_ID_SECONDARY = 20;
 
 
   }
