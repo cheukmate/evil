@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
@@ -198,8 +199,24 @@ public class RobotContainer
       
     }
 
-    // :)
+    // :
 
+    new Trigger(driverXbox.leftBumper())
+    .whileTrue(new RunCommand(
+        () -> {
+            double forward = LimelightHelpers.getTY("limelight") * -0.3;
+            double strafe = driverXbox.getLeftX();
+            double rotation = LimelightHelpers.getTX("limelight") * -0.05;
+
+            drivebase.drive(
+                new Translation2d(forward, strafe),
+                rotation,
+                false
+            );
+        },
+        drivebase
+    ));
+    
     if (Robot.isSimulation()){
 
     }
@@ -224,7 +241,8 @@ public class RobotContainer
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
       driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
-      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase));
+      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase)); 
+      driverXbox.leftTrigger().onFalse(shooter.stopCommand());
      
 
 

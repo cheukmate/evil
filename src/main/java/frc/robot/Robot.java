@@ -75,7 +75,12 @@ public class Robot extends TimedRobot
     CommandScheduler.getInstance().run();
 
     double omegaRPS = Units.degreesToRotations(m_robotContainer.drivebase.getRobotVelocity().omegaRadiansPerSecond);
-    //var llMeasurement = LimelightHelpers.
+    var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+    if(llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRPS) < 2.0){
+      m_robotContainer.drivebase.resetOdometry(llMeasurement.pose);
+    }
+  
   }
 
   /**
@@ -180,5 +185,7 @@ public class Robot extends TimedRobot
   @Override
   public void simulationPeriodic()
   {
+    
+  
   }
 }
