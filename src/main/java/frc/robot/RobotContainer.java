@@ -54,7 +54,7 @@ public class RobotContainer
 
   // Define Subsystems.
 
-  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+   final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
   private final Climber climber = new Climber();
