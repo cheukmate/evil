@@ -98,6 +98,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Shooter/LeaderVelocity", leaderTalon.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Shooter/FollowerVelocity", followerTalon.getVelocity().getValueAsDouble());
+
+
+    SmartDashboard.putNumber("Shooter Both Velocity", shooter.getSpeed().baseUnitMagnitude());
     
   }
 
