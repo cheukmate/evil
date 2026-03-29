@@ -38,6 +38,8 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import swervelib.SwerveInputStream;
 
@@ -135,24 +137,22 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    //Create the NamedCommands that will be used in PathPlanner //TODO: Make autos
+  //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
+ // PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
+
+   //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-
-    
     NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(2));
-
     NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
-
     NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
-
     NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
     NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
     NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
-
-    
     NamedCommands.registerCommand("Aim Command", new AimAtHubCommand(drivebase, driveAngularVelocity));
     NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooter, kicker, drivebase));
+
+   
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
