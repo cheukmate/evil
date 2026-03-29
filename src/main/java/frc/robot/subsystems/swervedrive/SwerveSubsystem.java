@@ -140,22 +140,29 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic(){
     
-double robotYaw = swerveDrive.getYaw().getDegrees();
-LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-// Get the pose estimate
-LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
 
-// Add it to your pose estimator
-swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
-swerveDrive.addVisionMeasurement(
+updateVisionOdometry();
+swerveDrive.updateOdometry();
+
+  }
+
+  public void updateVisionOdometry(){
+    double robotYaw = swerveDrive.getYaw().getDegrees();
+    LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+  // Get the pose estimate
+  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+
+  // Add it to your pose estimator
+  if(limelightMeasurement.tagCount >= 1){
+  swerveDrive.addVisionMeasurement(
     limelightMeasurement.pose,
     limelightMeasurement.timestampSeconds
 );
-
-swerveDrive.updateOdometry();
-
+}
+swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
   }
 
   public void setupLimelight(){
@@ -720,6 +727,7 @@ swerveDrive.updateOdometry();
        public void driveFieldOrientedSetpoint(ChassisSpeeds speeds) {
         swerveDrive.driveFieldOriented(speeds);
     }
+
 
 
 }

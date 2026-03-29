@@ -147,11 +147,10 @@ public class RobotContainer
     NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
 
     NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
-
     NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
     NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
 
-    NamedCommands.registerCommand("REVANDSHOOT",shooter.setVelocityCommand(RPM.of(2500)).andThen(new WaitCommand(3)).deadlineFor(kicker.feedCommand()));
+    
     NamedCommands.registerCommand("Aim Command", new AimAtHubCommand(drivebase, driveAngularVelocity));
     NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooter, kicker, drivebase));
 
