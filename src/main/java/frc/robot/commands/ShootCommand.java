@@ -39,7 +39,7 @@ public class ShootCommand extends Command {
     private final Kicker kicker;
     private final Optional<SwerveSubsystem> swerve;
     private final AngularVelocity goalRPM;   // <-- parameter stored here
-    private final Angle goalDegree;
+  
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
 
@@ -95,7 +95,7 @@ public class ShootCommand extends Command {
         this.swerve = Optional.empty();
         
         this.goalRPM = goalRPM1;   // <-- store parameter
-        this.goalDegree = goalDegree1;
+        
 
         addRequirements(this.shooter, this.kicker);
     }
@@ -110,7 +110,7 @@ public class ShootCommand extends Command {
         
         this.swerve = Optional.of(swerve);
         goalRPM = RPM.zero();
-        goalDegree = Degrees.zero();
+        
 
         for (var shot : shots) {
             calculatedGoalRPM.put(shot.distance.in(Meters), shot.shooterSpeed.in(RPM));
@@ -137,7 +137,7 @@ public class ShootCommand extends Command {
     public void execute() {
 
         AngularVelocity goalRPM1 = goalRPM;
-        Angle goalDegree1 = goalDegree;
+        
         if (swerve.isPresent()) {
             goalRPM1 = RPM.of(calculatedGoalRPM.get(swerve.get().distanceToHub()));
             //goalDegree1 = Degrees.of(calculatedHoodAngle.get(swerve.get().distanceToHub()));

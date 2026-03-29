@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
@@ -152,6 +152,8 @@ public class RobotContainer
     NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
 
     NamedCommands.registerCommand("REVANDSHOOT",shooter.setVelocityCommand(RPM.of(2500)).andThen(new WaitCommand(3)).deadlineFor(kicker.feedCommand()));
+    NamedCommands.registerCommand("Aim Command", new AimAtHubCommand(drivebase, driveAngularVelocity));
+    NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooter, kicker, drivebase));
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
