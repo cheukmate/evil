@@ -149,27 +149,27 @@ swerveDrive.updateOdometry();
 
   public void updateVisionOdometry(){
     double robotYaw = swerveDrive.getYaw().getDegrees();
-    LimelightHelpers.SetRobotOrientation("limelight", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("limelight-cowtown", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   // Get the pose estimate
-  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-cowtown");
 
 
   // Add it to your pose estimator
-  if(limelightMeasurement.tagCount >= 1){
+  
   swerveDrive.addVisionMeasurement(
     limelightMeasurement.pose,
     limelightMeasurement.timestampSeconds
 );
-}
+
 swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
   }
 
   public void setupLimelight(){
-    LimelightHelpers.SetIMUMode("limelight", 1);
+    LimelightHelpers.SetIMUMode("limelight-cowtown", 1);
 
     int[] validIDs = {17,18,19,20,21,22,6,7,8,9,10,11};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-cowtown", validIDs);
 
    
   }

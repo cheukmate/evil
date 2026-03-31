@@ -5,21 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "DeployIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "EatBalls"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "STARTING Hub to Neutral"
+            "pathName": "Left Trench to Neutral"
           }
         },
         {
@@ -43,13 +31,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Hub to Depot"
+            "pathName": "Hub to Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Depot to Hub"
+            "pathName": "DEEPER Neutral to Hub"
           }
         },
         {

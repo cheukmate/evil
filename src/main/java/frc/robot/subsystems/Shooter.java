@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
   private final SmartMotorControllerConfig shooterSmartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withFollowers(Pair.of(followerTalon, false)) //lowkirkenuinely dont know what the second parameter does ngl twin
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(0.00036, 0, 0) // Change twin! .0000036 or smth idk
+      .withClosedLoopController(0.00026, 0, 0) // Change twin! .0000036 or smth idk
       .withFeedforward(new SimpleMotorFeedforward(0.191, 0.11858, 0.0)) // 0.191, 0.11858, 0.0 
       .withTelemetry("ShooterMotor", TelemetryVerbosity.LOW)
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
