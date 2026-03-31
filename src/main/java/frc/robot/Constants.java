@@ -76,7 +76,7 @@ public final class Constants
     public static final int FLYWHEEL_MOTOR_MAIN_KRAKEN = 12;
     public static final int FLYWHEEL_MOTOR_FOLLOWER_KRAKEN = 13;
 
-    public static final int SHOOTERHOOD = 38;
+   // public static final int SHOOTERHOOD = 38;
 
     public static final int INDEXER = 14;
 
