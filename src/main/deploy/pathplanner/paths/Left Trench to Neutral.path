@@ -3,32 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.98649373881932,
-        "y": 7.369320214669052
+        "x": 4.0,
+        "y": 7.417996422182468
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.206924838842855,
-        "y": 7.501498445074571
+        "x": 8.464704830053668,
+        "y": 7.888533094812164
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6927370304114486,
-        "y": 5.925259391771019
+        "x": 7.815688729874777,
+        "y": 4.64345259391771
       },
       "prevControl": {
-        "x": 0.47050651420448275,
-        "y": 5.810744774073602
+        "x": 8.010393559928444,
+        "y": 5.42227191413238
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.05882352941176478,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.2887700534759359,
+      "rotationDegrees": 88.91476868058731
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 87.95459151111272
   },
   "reversed": false,
   "folder": "Left Trench",
