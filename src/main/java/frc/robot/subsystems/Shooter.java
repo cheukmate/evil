@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
+
 
 
 
@@ -17,9 +17,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -96,8 +93,12 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber("Shooter/LeaderVelocity", leaderTalon.getVelocity().getValueAsDouble());
-    //SmartDashboard.putNumber("Shooter/FollowerVelocity", followerTalon.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter/LeaderVelocity", leaderTalon.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter/FollowerVelocity", followerTalon.getVelocity().getValueAsDouble());
+
+
+    SmartDashboard.putNumber("Shooter Both Velocity", shooter.getSpeed().baseUnitMagnitude());
+    
   }
 
   @Override

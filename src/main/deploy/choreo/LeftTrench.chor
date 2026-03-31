@@ -1,0 +1,84 @@
+{
+ "name":"LeftTrench",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{},
+  "poses":{}
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"13.5 in",
+    "val":0.3429
+   },
+   "y":{
+    "exp":"13.5 in",
+    "val":0.3429
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-13.5 in",
+    "val":-0.3429
+   },
+   "y":{
+    "exp":"13.5 in",
+    "val":0.3429
+   }
+  },
+  "mass":{
+   "exp":"104 lbs",
+   "val":47.17360648
+  },
+  "inertia":{
+   "exp":"3.83572485542 kg m ^ 2",
+   "val":3.83572485542
+  },
+  "gearing":{
+   "exp":"6.75",
+   "val":6.75
+  },
+  "radius":{
+   "exp":"1.95 in",
+   "val":0.04953
+  },
+  "vmax":{
+   "exp":"4550 RPM",
+   "val":476.4748857944519
+  },
+  "tmax":{
+   "exp":"2.6 N * m",
+   "val":2.6
+  },
+  "cof":{
+   "exp":"1",
+   "val":1.0
+  },
+  "bumper":{
+   "front":{
+    "exp":"14.25 in",
+    "val":0.36195
+   },
+   "side":{
+    "exp":"14.25 in",
+    "val":0.36195
+   },
+   "back":{
+    "exp":"14.25 in",
+    "val":0.36195
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":"../C:/Users/goona/evil-2/src/main/deploy",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}

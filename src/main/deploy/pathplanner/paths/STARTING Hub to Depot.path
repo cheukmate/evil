@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4510554561717353,
-        "y": 6.038837209302326
+        "x": 3.5646332737030413,
+        "y": 4.026887298747764
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.806974641039214,
-        "y": 6.009843061090377
+        "x": 3.8896758925770825,
+        "y": 3.9138404039974066
       },
       "isLocked": false,
       "linkedName": null
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 0.7414132379248655,
-        "y": 6.038837209302326
+        "y": 5.990161001788908
       },
       "prevControl": {
-        "x": 0.4436884190397397,
-        "y": 6.023330162820663
+        "x": 0.9481784457775286,
+        "y": 6.239193903493721
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,26 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "DeployIntake",
-      "waypointRelativePos": 0.315254237288135,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "IntakeBalls",
-      "waypointRelativePos": 0.6237288135593215,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "StopIntaking",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -64,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Hub",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

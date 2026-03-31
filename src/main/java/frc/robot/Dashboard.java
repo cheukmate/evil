@@ -32,13 +32,10 @@ public class Dashboard {
         SmartDashboard.putData("Dashboard/Field", field);
     }
 
-    public static void hubActive(){
-        
-    }
+    
 
-    public static void MatchTimer(){
-        double matchTime = DriverStation.getMatchTime();
-        SmartDashboard.putNumber("Timer", matchTime);
+    public static double MatchTimer(){
+      return DriverStation.getMatchTime();
     }
 
     public static Field2d getField2d() {

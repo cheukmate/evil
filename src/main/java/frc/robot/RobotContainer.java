@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
@@ -34,9 +35,15 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.util.FileVersionException;
 
 import swervelib.SwerveInputStream;
 
@@ -56,7 +63,7 @@ public class RobotContainer
 
   // Define Subsystems.
 
-  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+   final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
   //private final Climber climber = new Climber();
@@ -134,23 +141,34 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    //Create the NamedCommands that will be used in PathPlanner //TODO: Make autos
+  //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-
+  try {
+    PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
+  } catch (FileVersionException e) {
+   
+    e.printStackTrace();
+  } catch (IOException e) {
     
-    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(2));
+    e.printStackTrace();
+  } catch (ParseException e) {
+   
+    e.printStackTrace();
+  }
 
+   //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
+   
+    NamedCommands.registerCommand("EatBalls", intake.rollerCommand(1).withTimeout(1));
     NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
-
     NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
-
     NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
-
     NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
-    NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
+    NamedCommands.registerCommand("Stop Shooting", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
+    NamedCommands.registerCommand("Aim", new AimAtHubCommand(drivebase, driveAngularVelocity).withTimeout(2));
+    NamedCommands.registerCommand("Shoot!", new ShootCommand(shooter, kicker, drivebase).withTimeout(5));
+    
 
-    NamedCommands.registerCommand("REVANDSHOOT",shooter.setVelocityCommand(RPM.of(2500)).andThen(new WaitCommand(3)).deadlineFor(kicker.feedCommand()));
+   
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -198,8 +216,24 @@ public class RobotContainer
       
     }
 
-    // :)
+    // :
 
+    new Trigger(driverXbox.leftBumper())
+    .whileTrue(new RunCommand(
+        () -> {
+            double forward = LimelightHelpers.getTY("limelight") * -0.3;
+            double strafe = driverXbox.getLeftX();
+            double rotation = LimelightHelpers.getTX("limelight") * -0.05;
+
+            drivebase.drive(
+                new Translation2d(forward, strafe),
+                rotation,
+                false
+            );
+        },
+        drivebase
+    ));
+    
     if (Robot.isSimulation()){
 
     }
@@ -222,9 +256,14 @@ public class RobotContainer
       // Driver commands 
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      // aims the front of the robot at the hub using odometry and the pose of the hub
       driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
       driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
-      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase));
+      // shoots the ball based on the distance from the hub using an interpolating tree map!
+      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase)); 
+      driverXbox.leftTrigger().onFalse(shooter.stopCommand());
+
+      
      
 
 

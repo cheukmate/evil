@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import static edu.wpi.first.units.Units.Degrees;
+
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Second;
@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.RobotBase;
 
 
 public class ShootCommand extends Command {
@@ -39,15 +40,44 @@ public class ShootCommand extends Command {
     private final Kicker kicker;
     private final Optional<SwerveSubsystem> swerve;
     private final AngularVelocity goalRPM;   // <-- parameter stored here
-    private final Angle goalDegree;
+    private final double kickerSpeed = 1;
+  
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE
-            new RecordedShot(Meters.of(1.25), RPM.of(1000), Second.of(1)),
-            new RecordedShot(Meters.of(1.75), RPM.of(2000),Second.of(1)),
-            new RecordedShot(Meters.of(2), RPM.of(2500),Second.of(1))
+            new RecordedShot(Meters.of(1.25), RPM.of(2300), Second.of(1)),
+            new RecordedShot(Meters.of(1.35), RPM.of(2311),Second.of(1)),
+            new RecordedShot(Meters.of(1.45), RPM.of(2350),Second.of(1)),
+            new RecordedShot(Meters.of(1.55), RPM.of(2400), Second.of(1)),
+            new RecordedShot(Meters.of(1.65), RPM.of(2450),Second.of(1)),
+            new RecordedShot(Meters.of(1.75), RPM.of(2500),Second.of(1)),
+            new RecordedShot(Meters.of(1.85), RPM.of(2500), Second.of(1)),
+            new RecordedShot(Meters.of(1.95), RPM.of(2530),Second.of(1)),
+            new RecordedShot(Meters.of(2.05), RPM.of(2570),Second.of(1)),
+            new RecordedShot(Meters.of(2.15), RPM.of(2600), Second.of(1)),
+            new RecordedShot(Meters.of(2.30), RPM.of(2800),Second.of(1)),
+            new RecordedShot(Meters.of(2.45), RPM.of(3000),Second.of(1)),
+            new RecordedShot(Meters.of(2.60), RPM.of(3100), Second.of(1)),
+            new RecordedShot(Meters.of(2.70), RPM.of(3200),Second.of(1)),
+            new RecordedShot(Meters.of(2.90), RPM.of(3300),Second.of(1)),
+            new RecordedShot(Meters.of(3.00), RPM.of(3400),Second.of(1)),
+            new RecordedShot(Meters.of(3.10), RPM.of(3500),Second.of(1)),
+            new RecordedShot(Meters.of(3.20), RPM.of(3530),Second.of(1)),
+            new RecordedShot(Meters.of(3.30), RPM.of(3590),Second.of(1)),
+            new RecordedShot(Meters.of(3.40), RPM.of(3600),Second.of(1)),
+            new RecordedShot(Meters.of(3.50), RPM.of(3650),Second.of(1)),
+            new RecordedShot(Meters.of(3.60), RPM.of(3690),Second.of(1)),
+            new RecordedShot(Meters.of(3.70), RPM.of(3700),Second.of(1)),
+            new RecordedShot(Meters.of(3.80), RPM.of(3800),Second.of(1)),
+            new RecordedShot(Meters.of(3.90), RPM.of(3830),Second.of(1)),
+            new RecordedShot(Meters.of(4.00), RPM.of(3840),Second.of(1)),
+            new RecordedShot(Meters.of(4.5), RPM.of(3900), Second.of(1)),
+            new RecordedShot(Meters.of(5.00), RPM.of(4050),Second.of(1))
+
+
+
 
     );
     private final InterpolatingDoubleTreeMap calculatedGoalRPM = new InterpolatingDoubleTreeMap();
@@ -67,7 +97,7 @@ public class ShootCommand extends Command {
         this.swerve = Optional.empty();
         
         this.goalRPM = goalRPM1;   // <-- store parameter
-        this.goalDegree = goalDegree1;
+        
 
         addRequirements(this.shooter, this.kicker);
     }
@@ -82,7 +112,7 @@ public class ShootCommand extends Command {
         
         this.swerve = Optional.of(swerve);
         goalRPM = RPM.zero();
-        goalDegree = Degrees.zero();
+        
 
         for (var shot : shots) {
             calculatedGoalRPM.put(shot.distance.in(Meters), shot.shooterSpeed.in(RPM));
@@ -98,6 +128,7 @@ public class ShootCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         shooter.setVelocitySetpoint(goalRPM);
+        kicker.feedCommand();
         // if (swerve.isEmpty()) {
         //     hood.setAngleSetpoint(goalDegree);
         // }
@@ -107,33 +138,44 @@ public class ShootCommand extends Command {
 
     @Override
     public void execute() {
-
+        
         AngularVelocity goalRPM1 = goalRPM;
-        Angle goalDegree1 = goalDegree;
+        
         if (swerve.isPresent()) {
             goalRPM1 = RPM.of(calculatedGoalRPM.get(swerve.get().distanceToHub()));
             //goalDegree1 = Degrees.of(calculatedHoodAngle.get(swerve.get().distanceToHub()));
         }
 
         shooter.setVelocitySetpoint(goalRPM1);
+        
         //hood.setAngleSetpoint(goalDegree1);
 
-        AngularVelocity shooterRPM = shooter.getRPM();
+      
+         AngularVelocity shooterRPM = shooter.getRPM();
 
-        boolean shooterReady = shootDebounce1.calculate(
+          boolean shooterReady =
+        
+         shootDebounce1.calculate(
                 shooterRPM.isNear(
                         goalRPM1,
-                        RPM.of(300)// tolerance
-                )
+                       RPM.of(200)// tolerance
+              )
 
-        );
+     );
+        // if (RobotBase.isSimulation()) {
+            
+        //     shooterReady = true;
+            
+        // }
 
-        if (shooterReady) {
-            kicker.feedCommand();
-  
+         if(shooterReady){
+          kicker.feedCommand();
+          System.out.println("Im ready im ready");
         } else {
-            kicker.stopCommand();
-        }
+         kicker.stopCommand();
+     }
+            
+       
 
 
     }
