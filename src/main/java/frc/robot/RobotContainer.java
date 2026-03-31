@@ -35,11 +35,15 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.util.FileVersionException;
 
 import swervelib.SwerveInputStream;
 
@@ -139,18 +143,30 @@ public class RobotContainer
 
   //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
- // PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
+  try {
+    PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
+  } catch (FileVersionException e) {
+   
+    e.printStackTrace();
+  } catch (IOException e) {
+    
+    e.printStackTrace();
+  } catch (ParseException e) {
+   
+    e.printStackTrace();
+  }
 
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("IntakeBalls", intake.rollerCommand(2));
+   
+    NamedCommands.registerCommand("EatBalls", intake.rollerCommand(1).withTimeout(1));
     NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
     NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
     NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
     NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
-    NamedCommands.registerCommand("Stop Shooting and Revving", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
-    NamedCommands.registerCommand("Aim Command", new AimAtHubCommand(drivebase, driveAngularVelocity));
-    NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooter, kicker, drivebase));
+    NamedCommands.registerCommand("Stop Shooting", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
+    NamedCommands.registerCommand("Aim", new AimAtHubCommand(drivebase, driveAngularVelocity).withTimeout(2));
+    NamedCommands.registerCommand("Shoot!", new ShootCommand(shooter, kicker, drivebase).withTimeout(5));
+    
 
    
 
@@ -246,6 +262,8 @@ public class RobotContainer
       // shoots the ball based on the distance from the hub using an interpolating tree map!
       driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase)); 
       driverXbox.leftTrigger().onFalse(shooter.stopCommand());
+
+      
      
 
 

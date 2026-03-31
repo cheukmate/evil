@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.RobotBase;
 
 
 public class ShootCommand extends Command {
@@ -39,6 +40,7 @@ public class ShootCommand extends Command {
     private final Kicker kicker;
     private final Optional<SwerveSubsystem> swerve;
     private final AngularVelocity goalRPM;   // <-- parameter stored here
+    private final double kickerSpeed = 1;
   
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
@@ -126,6 +128,7 @@ public class ShootCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         shooter.setVelocitySetpoint(goalRPM);
+        kicker.feedCommand();
         // if (swerve.isEmpty()) {
         //     hood.setAngleSetpoint(goalDegree);
         // }
@@ -135,7 +138,7 @@ public class ShootCommand extends Command {
 
     @Override
     public void execute() {
-
+        
         AngularVelocity goalRPM1 = goalRPM;
         
         if (swerve.isPresent()) {
@@ -144,24 +147,35 @@ public class ShootCommand extends Command {
         }
 
         shooter.setVelocitySetpoint(goalRPM1);
+        
         //hood.setAngleSetpoint(goalDegree1);
 
-        AngularVelocity shooterRPM = shooter.getRPM();
+      
+         AngularVelocity shooterRPM = shooter.getRPM();
 
-        boolean shooterReady = shootDebounce1.calculate(
+          boolean shooterReady =
+        
+         shootDebounce1.calculate(
                 shooterRPM.isNear(
                         goalRPM1,
-                        RPM.of(300)// tolerance
-                )
+                       RPM.of(200)// tolerance
+              )
 
-        );
+     );
+        // if (RobotBase.isSimulation()) {
+            
+        //     shooterReady = true;
+            
+        // }
 
-        if (shooterReady) {
-            kicker.feedCommand();
-  
+         if(shooterReady){
+          kicker.feedCommand();
+          System.out.println("Im ready im ready");
         } else {
-            kicker.stopCommand();
-        }
+         kicker.stopCommand();
+     }
+            
+       
 
 
     }

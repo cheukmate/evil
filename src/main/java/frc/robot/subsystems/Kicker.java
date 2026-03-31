@@ -20,6 +20,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class Kicker extends SubsystemBase {
@@ -34,6 +35,7 @@ public class Kicker extends SubsystemBase {
   .withControlMode(ControlMode.OPEN_LOOP)
   .withGearing(new MechanismGearing(GearBox.fromReductionStages(1))) // probably no gearbox
   .withMotorInverted(true)
+  .withTelemetry("Kicker Wheels", TelemetryVerbosity.HIGH)
   .withIdleMode(MotorMode.COAST)
   .withStatorCurrentLimit(Amps.of(40));
 
@@ -43,7 +45,8 @@ public class Kicker extends SubsystemBase {
   .withDiameter(Inches.of(4))
   .withMass(Pounds.of(0.5))
   .withUpperSoftLimit(RPM.of(3000))
-  .withLowerSoftLimit(RPM.of(-3000));
+  .withLowerSoftLimit(RPM.of(-3000))
+  .withTelemetry("kicker", TelemetryVerbosity.HIGH);
 
   private FlyWheel kickerWheels = new FlyWheel(kickerConfig);
   
@@ -55,14 +58,20 @@ public class Kicker extends SubsystemBase {
    * Command to push balls into the shooter while ran.
    */
   public Command feedCommand() {
-    return kickerWheels.set(-KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0)).withName("FeedKickerBalls");
+    return kickerWheels.set(-KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0));
     
   }
 
   public Command backFeedCommand() {
-    return kickerWheels.set(KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0)).withName("KickerReverseBalls");
+    return kickerWheels.set(KICKER_SPEED).finallyDo(() -> kickerSmartMotorController.setDutyCycle(0));
 
   }
+
+  public void setSpeed(double speed){
+    System.out.println("setting speed to..." + speed);
+    kickerWheels.set(speed);
+  }
+
 
   /**
    * Command to run the hopper in reverse while held.
@@ -82,6 +91,6 @@ public class Kicker extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    
+    kickerWheels.simIterate();
   }
 }
