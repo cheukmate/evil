@@ -6,7 +6,7 @@ import java.util.Optional;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.IntegerPublisher;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringSubscriber;
@@ -19,7 +19,7 @@ public class Dashboard {
     public static NetworkTable dashboardTable = NetworkTableInstance.getDefault().getTable("Dashboard");
     private static BooleanSubscriber manualOverrideReciever = dashboardTable.getBooleanTopic("AutonomousOverride").subscribe(false);
     private static StringSubscriber allianceBackupSelector = dashboardTable.getStringTopic("AllianceBackup").subscribe("Blue");
-    private static BooleanPublisher elevatorDownPublisher = dashboardTable.getBooleanTopic("DriveUnderTrench").publish();
+ 
     private static BooleanPublisher hubActivePublisher = dashboardTable.getBooleanTopic("HubActive").publish();
     private static DoublePublisher matchPhaseChangePublisher = dashboardTable.getDoubleTopic("PhaseChangeIn").publish();
     private static Field2d field = new Field2d();

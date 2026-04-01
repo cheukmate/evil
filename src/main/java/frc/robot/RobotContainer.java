@@ -4,10 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.field.FuelSim;
@@ -38,17 +36,13 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.function.Supplier;
 
-import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import com.pathplanner.lib.events.EventTrigger;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-import com.pathplanner.lib.util.FileVersionException;
+
 
 import swervelib.SwerveInputStream;
 
@@ -150,19 +144,7 @@ public class RobotContainer
 
   //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
-  try {
-    PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
-  } catch (FileVersionException e) {
-   
-    e.printStackTrace();
-  } catch (IOException e) {
-    
-    e.printStackTrace();
-  } catch (ParseException e) {
-   
-    e.printStackTrace();
-    
-  }
+
 
   configFuelSim();
     configFuelSimRobot();
@@ -194,8 +176,7 @@ public class RobotContainer
     autoChooser = AutoBuilder.buildAutoChooser();
 
     //Set the default auto (do nothing) 
-    autoChooser.setDefaultOption("DEFAULT AUTO", Commands.none());
-
+    autoChooser.setDefaultOption("DEFAULT AUTO, DO NOTHING", Commands.none());
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
 

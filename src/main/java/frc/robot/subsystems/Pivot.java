@@ -61,7 +61,7 @@
   
 //     globalConfig.closedLoop
 //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-//     .pid(kP, kI, kD)  // TODO: TUNE TS
+//     .pid(kP, kI, kD)  // 
 //     .outputRange(-1, 1)
 //     .maxMotion
 //             .cruiseVelocity(3)

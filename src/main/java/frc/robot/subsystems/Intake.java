@@ -48,16 +48,16 @@ public class Intake extends SubsystemBase {
 
   // SparkFlexes controlling the intake roller
   private SparkFlex roller = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
-  //private SparkFlex roller2 = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
+  private SparkMax roller2 = new SparkMax(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
   // SparkMaxes for the bring-in thingy
   private SparkMax pivotMotor = new SparkMax(Constants.IDConstants.PIVOT1, MotorType.kBrushless);
   private SparkMax pivotMotor2 = new SparkMax(Constants.IDConstants.PIVOT2, MotorType.kBrushless);
 
   private SmartMotorControllerConfig rollerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
-      //.withFollowers(Pair.of(roller2, true))
+      .withFollowers(Pair.of(roller2, true))
       .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.LOW)
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(1))) // Direct drive, adjust if geared
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4))) // Direct drive, adjust if geared
       .withMotorInverted(false) 
       .withIdleMode(MotorMode.COAST)
       .withStatorCurrentLimit(Amps.of(40));
