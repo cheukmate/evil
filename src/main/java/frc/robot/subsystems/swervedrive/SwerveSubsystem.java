@@ -66,6 +66,8 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+
+  private final String LimeLightName = "limelight-cowtown";
  
 
 
@@ -149,10 +151,10 @@ swerveDrive.updateOdometry();
 
   public void updateVisionOdometry(){
     double robotYaw = swerveDrive.getYaw().getDegrees();
-    LimelightHelpers.SetRobotOrientation("limelight-cowtown", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation(LimeLightName, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   // Get the pose estimate
-  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-cowtown");
+  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimeLightName);
 
 
   // Add it to your pose estimator
@@ -166,10 +168,10 @@ swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how tru
   }
 
   public void setupLimelight(){
-    LimelightHelpers.SetIMUMode("limelight-cowtown", 1);
+    LimelightHelpers.SetIMUMode(LimeLightName, 1);
 
     int[] validIDs = {17,18,19,20,21,22,6,7,8,9,10,11};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-cowtown", validIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride(LimeLightName, validIDs);
 
    
   }

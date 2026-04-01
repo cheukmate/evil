@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.field.FuelSim;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,6 +39,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
@@ -69,6 +73,8 @@ public class RobotContainer
   private final Kicker kicker = new Kicker();
   //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
+  public FuelSim fuelSim = new FuelSim("FuelSim"); // creates a new fuelSim of FuelSim
+ // spawns fuel in the depots and neutral zone
 
 
   // private final Superstructure superstructure = new Superstructure(hood, intake, kicker, shooter);
@@ -155,8 +161,13 @@ public class RobotContainer
   } catch (ParseException e) {
    
     e.printStackTrace();
+    
   }
 
+  configFuelSim();
+    configFuelSimRobot();
+
+  
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
    
     NamedCommands.registerCommand("EatBalls", intake.rollerCommand(.5).repeatedly());
@@ -194,6 +205,36 @@ public class RobotContainer
     
     }
   
+    public void configFuelSim(){
+
+      fuelSim = new FuelSim();
+    fuelSim.spawnStartingFuel();
+
+    fuelSim.start();
+    fuelSim.enableAirResistance();
+    SmartDashboard.putData(Commands.runOnce(() -> {
+              fuelSim.clearFuel();
+              fuelSim.spawnStartingFuel();
+          })
+           .withName("Reset Fuel")
+           .ignoringDisable(true));
+
+
+
+
+    }
+
+    public void configFuelSimRobot(){
+
+      
+    fuelSim.registerRobot(
+        .686, // from left to right in meters
+        .686, // from front to back in meters
+        .14, // from floor to top of bumpers in meters
+       drivebase::getPose, // Supplier<Pose2d> of robot pose
+       drivebase::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
+
+    }
 
 
   /**
@@ -215,6 +256,8 @@ public class RobotContainer
     if (RobotBase.isSimulation())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+      
+  
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);

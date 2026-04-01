@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Second;
 import java.util.List;
 import java.util.Optional;
 
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import edu.wpi.first.math.Pair;
@@ -41,7 +42,7 @@ public class ShootCommand extends Command {
     private final Optional<SwerveSubsystem> swerve;
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     private final double kickerSpeed = 1;
-  
+    
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
 
@@ -62,19 +63,19 @@ public class ShootCommand extends Command {
             new RecordedShot(Meters.of(2.60), RPM.of(3100), Second.of(1)),
             new RecordedShot(Meters.of(2.70), RPM.of(3200),Second.of(1)),
             new RecordedShot(Meters.of(2.90), RPM.of(3300),Second.of(1)),
-            new RecordedShot(Meters.of(3.00), RPM.of(3400),Second.of(1)),
-            new RecordedShot(Meters.of(3.10), RPM.of(3500),Second.of(1)),
-            new RecordedShot(Meters.of(3.20), RPM.of(3530),Second.of(1)),
-            new RecordedShot(Meters.of(3.30), RPM.of(3590),Second.of(1)),
-            new RecordedShot(Meters.of(3.40), RPM.of(3600),Second.of(1)),
-            new RecordedShot(Meters.of(3.50), RPM.of(3650),Second.of(1)),
-            new RecordedShot(Meters.of(3.60), RPM.of(3690),Second.of(1)),
-            new RecordedShot(Meters.of(3.70), RPM.of(3700),Second.of(1)),
-            new RecordedShot(Meters.of(3.80), RPM.of(3800),Second.of(1)),
-            new RecordedShot(Meters.of(3.90), RPM.of(3830),Second.of(1)),
-            new RecordedShot(Meters.of(4.00), RPM.of(3840),Second.of(1)),
-            new RecordedShot(Meters.of(4.5), RPM.of(3900), Second.of(1)),
-            new RecordedShot(Meters.of(5.00), RPM.of(4050),Second.of(1))
+            new RecordedShot(Meters.of(3.00), RPM.of(3360),Second.of(1)),
+            new RecordedShot(Meters.of(3.10), RPM.of(3400),Second.of(1)),
+            new RecordedShot(Meters.of(3.20), RPM.of(3430),Second.of(1)),
+            new RecordedShot(Meters.of(3.30), RPM.of(3490),Second.of(1)),
+            new RecordedShot(Meters.of(3.40), RPM.of(3500),Second.of(1)),
+            new RecordedShot(Meters.of(3.50), RPM.of(3550),Second.of(1)),
+            new RecordedShot(Meters.of(3.60), RPM.of(3590),Second.of(1)),
+            new RecordedShot(Meters.of(3.70), RPM.of(3600),Second.of(1)),
+            new RecordedShot(Meters.of(3.80), RPM.of(3300),Second.of(1)),
+            new RecordedShot(Meters.of(3.90), RPM.of(3330),Second.of(1)),
+            new RecordedShot(Meters.of(4.00), RPM.of(3340),Second.of(1)),
+            new RecordedShot(Meters.of(4.5), RPM.of(3400), Second.of(1)),
+            new RecordedShot(Meters.of(5.00), RPM.of(3500),Second.of(1))
 
 
 
@@ -162,11 +163,7 @@ public class ShootCommand extends Command {
               )
 
      );
-        // if (RobotBase.isSimulation()) {
-            
-        //     shooterReady = true;
-            
-        // }
+        
 
          if(shooterReady){
           kicker.feedCommand();
