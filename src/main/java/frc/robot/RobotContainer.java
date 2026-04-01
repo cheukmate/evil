@@ -41,6 +41,7 @@ import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import com.pathplanner.lib.util.FileVersionException;
@@ -158,23 +159,31 @@ public class RobotContainer
 
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
    
-    NamedCommands.registerCommand("EatBalls", intake.rollerCommand(1).withTimeout(1));
+    NamedCommands.registerCommand("EatBalls", intake.rollerCommand(.5).repeatedly());
     NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
     NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
-    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1));
+    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1
+    ));
     NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
     NamedCommands.registerCommand("Stop Shooting", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
     NamedCommands.registerCommand("Aim", new AimAtHubCommand(drivebase, driveAngularVelocity).withTimeout(2));
     NamedCommands.registerCommand("Shoot!", new ShootCommand(shooter, kicker, drivebase).withTimeout(5));
     
 
-   
+   // -----------------------------------------EVENT TRIGGERS--------------------------------------------------------------//
+
+   new EventTrigger("IntakeStart").onTrue(intake.setPower(.5));
+
+  new EventTrigger("Start Roller!").onTrue(intake.rollerCommand(.5));
+
+
+  new EventTrigger("IntakeStop").onTrue(intake.rollerCommand(0));
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
 
     //Set the default auto (do nothing) 
-    autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    autoChooser.setDefaultOption("DEFAULT AUTO", Commands.none());
 
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
