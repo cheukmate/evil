@@ -30,6 +30,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.LimelightResults;
+import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.field.FieldConstants;
 
 
@@ -66,14 +68,16 @@ public class SwerveSubsystem extends SubsystemBase
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+
+  private final String LimeLightName = "limelight-cowtown";
  
 
 
 
-  Pose3d                         cameraOffset        = new Pose3d(Inches.of(5).in(Meters),
-                                                                  Inches.of(5).in(Meters),
-                                                                  Inches.of(5).in(Meters),
-                                                                  Rotation3d.kZero);
+  // Pose3d                         cameraOffset        = new Pose3d(Inches.of(5).in(Meters),
+  //                                                                 Inches.of(5).in(Meters),
+  //                                                                 Inches.of(5).in(Meters),
+  //                                                                 Rotation3d.kZero);
                                                                   // Change to be yours
 
   /**
@@ -148,28 +152,37 @@ swerveDrive.updateOdometry();
   }
 
   public void updateVisionOdometry(){
-    double robotYaw = swerveDrive.getYaw().getDegrees();
-    LimelightHelpers.SetRobotOrientation("limelight-cowtown", robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+   
+    
+    
+       double robotYaw = swerveDrive.getYaw().getDegrees();
+    LimelightHelpers.SetRobotOrientation(LimeLightName, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   // Get the pose estimate
-  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-cowtown");
-
-
-  // Add it to your pose estimator
-  
-  swerveDrive.addVisionMeasurement(
+  LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimeLightName);
+if(limelightMeasurement.tagCount>= 2){
+swerveDrive.addVisionMeasurement(
     limelightMeasurement.pose,
     limelightMeasurement.timestampSeconds
 );
+  swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
+}
+    
+    
+   
 
-swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
+  // Add it to your pose estimator
+  
+  
+
+
   }
 
   public void setupLimelight(){
-    LimelightHelpers.SetIMUMode("limelight-cowtown", 1);
+    LimelightHelpers.SetIMUMode(LimeLightName, 1);
 
     int[] validIDs = {17,18,19,20,21,22,6,7,8,9,10,11};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-cowtown", validIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride(LimeLightName, validIDs);
 
    
   }

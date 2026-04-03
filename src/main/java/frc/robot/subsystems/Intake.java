@@ -48,19 +48,19 @@ public class Intake extends SubsystemBase {
 
   // SparkFlexes controlling the intake roller
   private SparkFlex roller = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_MAIN, MotorType.kBrushless);
-  //private SparkFlex roller2 = new SparkFlex(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
+  private SparkMax roller2 = new SparkMax(Constants.IDConstants.INTAKEWHEELS_FLEX_FOLLOWER, MotorType.kBrushless);
   // SparkMaxes for the bring-in thingy
   private SparkMax pivotMotor = new SparkMax(Constants.IDConstants.PIVOT1, MotorType.kBrushless);
   private SparkMax pivotMotor2 = new SparkMax(Constants.IDConstants.PIVOT2, MotorType.kBrushless);
 
   private SmartMotorControllerConfig rollerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
-      //.withFollowers(Pair.of(roller2, true))
+      .withFollowers(Pair.of(roller2, false))
       .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.LOW)
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(1))) // Direct drive, adjust if geared
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4))) // 4:1 gearing
       .withMotorInverted(false) 
       .withIdleMode(MotorMode.COAST)
-      .withStatorCurrentLimit(Amps.of(40));
+      .withStatorCurrentLimit(Amps.of(50));
       
 
   private SmartMotorController rollerSmartMotorController = new SparkWrapper(roller, DCMotor.getNeoVortex(1), rollerConfig);
@@ -101,8 +101,8 @@ public class Intake extends SubsystemBase {
 
   private final ArmConfig intakePivotConfig = new ArmConfig(intakePivotController)
   
-      .withSoftLimits(Degrees.of(0), Degrees.of(242)) //make real number
-      .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
+      //.withSoftLimits(Degrees.of(0), Degrees.of(242)) //make real number
+      //.withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))
       .withMass(Pounds.of(10)) // Reis says: 2 pounds, not a lot

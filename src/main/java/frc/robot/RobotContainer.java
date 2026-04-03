@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -15,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,16 +35,13 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import com.pathplanner.lib.events.EventTrigger;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-import com.pathplanner.lib.util.FileVersionException;
+
 
 import swervelib.SwerveInputStream;
 
@@ -69,6 +66,8 @@ public class RobotContainer
   private final Kicker kicker = new Kicker();
   //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
+ 
+ // spawns fuel in the depots and neutral zone
 
 
   // private final Superstructure superstructure = new Superstructure(hood, intake, kicker, shooter);
@@ -144,19 +143,9 @@ public class RobotContainer
 
   //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
-  try {
-    PathPlannerPath choreoLeftTrench = PathPlannerPath.fromChoreoTrajectory("LeftTrench");
-  } catch (FileVersionException e) {
-   
-    e.printStackTrace();
-  } catch (IOException e) {
-    
-    e.printStackTrace();
-  } catch (ParseException e) {
-   
-    e.printStackTrace();
-  }
 
+
+  
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
    
     NamedCommands.registerCommand("EatBalls", intake.rollerCommand(.5).repeatedly());
@@ -183,8 +172,7 @@ public class RobotContainer
     autoChooser = AutoBuilder.buildAutoChooser();
 
     //Set the default auto (do nothing) 
-    autoChooser.setDefaultOption("DEFAULT AUTO", Commands.none());
-
+    autoChooser.setDefaultOption("DEFAULT AUTO, DO NOTHING", Commands.none());
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
 
@@ -194,7 +182,10 @@ public class RobotContainer
     
     }
   
+    
 
+   
+    
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -215,6 +206,8 @@ public class RobotContainer
     if (RobotBase.isSimulation())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+      
+  
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
@@ -315,7 +308,7 @@ operatorXbox.leftTrigger().whileTrue(intake.setPower(.7));
 operatorXbox.leftBumper().whileTrue(intake.setPower(-.7));
                                                                                             //---------ROLLERS---------//
 
-                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(1));
+                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(.8));
                                                                           operatorXbox.b().whileFalse(intake.rollerCommand(0));
 
 
