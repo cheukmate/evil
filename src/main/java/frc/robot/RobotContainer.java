@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.field.FuelSim;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,7 +66,7 @@ public class RobotContainer
   private final Kicker kicker = new Kicker();
   //private final Climber climber = new Climber();
   private final Intake intake = new Intake();
-  public FuelSim fuelSim = new FuelSim("FuelSim"); // creates a new fuelSim of FuelSim
+ 
  // spawns fuel in the depots and neutral zone
 
 
@@ -146,9 +145,6 @@ public class RobotContainer
 
 
 
-  configFuelSim();
-    configFuelSimRobot();
-
   
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
    
@@ -186,37 +182,10 @@ public class RobotContainer
     
     }
   
-    public void configFuelSim(){
+    
 
-      fuelSim = new FuelSim();
-    fuelSim.spawnStartingFuel();
-
-    fuelSim.start();
-    fuelSim.enableAirResistance();
-    SmartDashboard.putData(Commands.runOnce(() -> {
-              fuelSim.clearFuel();
-              fuelSim.spawnStartingFuel();
-          })
-           .withName("Reset Fuel")
-           .ignoringDisable(true));
-
-
-
-
-    }
-
-    public void configFuelSimRobot(){
-
-      
-    fuelSim.registerRobot(
-        .686, // from left to right in meters
-        .686, // from front to back in meters
-        .14, // from floor to top of bumpers in meters
-       drivebase::getPose, // Supplier<Pose2d> of robot pose
-       drivebase::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
-
-    }
-
+   
+    
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -339,7 +308,7 @@ operatorXbox.leftTrigger().whileTrue(intake.setPower(.7));
 operatorXbox.leftBumper().whileTrue(intake.setPower(-.7));
                                                                                             //---------ROLLERS---------//
 
-                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(1));
+                                                                          operatorXbox.b().whileTrue(intake.rollerCommand(.8));
                                                                           operatorXbox.b().whileFalse(intake.rollerCommand(0));
 
 

@@ -55,12 +55,12 @@ public class Intake extends SubsystemBase {
 
   private SmartMotorControllerConfig rollerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
-      .withFollowers(Pair.of(roller2, true))
+      .withFollowers(Pair.of(roller2, false))
       .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.LOW)
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4))) // Direct drive, adjust if geared
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4))) // 4:1 gearing
       .withMotorInverted(false) 
       .withIdleMode(MotorMode.COAST)
-      .withStatorCurrentLimit(Amps.of(40));
+      .withStatorCurrentLimit(Amps.of(50));
       
 
   private SmartMotorController rollerSmartMotorController = new SparkWrapper(roller, DCMotor.getNeoVortex(1), rollerConfig);
@@ -101,8 +101,8 @@ public class Intake extends SubsystemBase {
 
   private final ArmConfig intakePivotConfig = new ArmConfig(intakePivotController)
   
-      .withSoftLimits(Degrees.of(0), Degrees.of(242)) //make real number
-      .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
+      //.withSoftLimits(Degrees.of(0), Degrees.of(242)) //make real number
+      //.withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))
       .withMass(Pounds.of(10)) // Reis says: 2 pounds, not a lot

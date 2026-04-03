@@ -21,6 +21,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -162,13 +163,15 @@ public class ShootCommand extends Command {
                        RPM.of(200)// tolerance
               )
 
+             
      );
-        
+         SmartDashboard.putBoolean("Shooter Ready?", shooterReady);
 
-         if(shooterReady){
+         if(shooterReady = true){
           kicker.feedCommand();
-          System.out.println("Im ready im ready");
+         
         } else {
+
          kicker.stopCommand();
      }
             

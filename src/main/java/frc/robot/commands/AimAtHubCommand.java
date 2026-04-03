@@ -29,7 +29,7 @@ public class AimAtHubCommand extends Command
   {
     swerveInputStream.aim(AllianceFlipUtil.apply(new Pose2d(Hub.topCenterPoint.toTranslation2d(), Rotation2d.kZero)))
                      .aimWhile(true)
-                     .scaleTranslation(0.3);
+                     .scaleTranslation(-0.2);
 
   }
 
@@ -50,6 +50,6 @@ public class AimAtHubCommand extends Command
   public void end(boolean interrupted)
   {
     swerveInputStream.aimWhile(false)
-                     .scaleTranslation(1);
+                     .scaleTranslation(-0.3);
   }
 }

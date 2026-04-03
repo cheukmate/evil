@@ -30,6 +30,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.LimelightResults;
+import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.field.FieldConstants;
 
 
@@ -72,10 +74,10 @@ public class SwerveSubsystem extends SubsystemBase
 
 
 
-  Pose3d                         cameraOffset        = new Pose3d(Inches.of(5).in(Meters),
-                                                                  Inches.of(5).in(Meters),
-                                                                  Inches.of(5).in(Meters),
-                                                                  Rotation3d.kZero);
+  // Pose3d                         cameraOffset        = new Pose3d(Inches.of(5).in(Meters),
+  //                                                                 Inches.of(5).in(Meters),
+  //                                                                 Inches.of(5).in(Meters),
+  //                                                                 Rotation3d.kZero);
                                                                   // Change to be yours
 
   /**
@@ -150,21 +152,30 @@ swerveDrive.updateOdometry();
   }
 
   public void updateVisionOdometry(){
-    double robotYaw = swerveDrive.getYaw().getDegrees();
+   
+    
+    
+       double robotYaw = swerveDrive.getYaw().getDegrees();
     LimelightHelpers.SetRobotOrientation(LimeLightName, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   // Get the pose estimate
   LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimeLightName);
-
-
-  // Add it to your pose estimator
-  
-  swerveDrive.addVisionMeasurement(
+if(limelightMeasurement.tagCount>= 2){
+swerveDrive.addVisionMeasurement(
     limelightMeasurement.pose,
     limelightMeasurement.timestampSeconds
 );
+  swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
+}
+    
+    
+   
 
-swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, .2)); // how trustworthy each value from vision is, kalman filter standard deviations
+  // Add it to your pose estimator
+  
+  
+
+
   }
 
   public void setupLimelight(){
