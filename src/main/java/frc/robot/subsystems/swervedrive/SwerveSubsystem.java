@@ -181,7 +181,7 @@ swerveDrive.addVisionMeasurement(
   public void setupLimelight(){
     LimelightHelpers.SetIMUMode(LimeLightName, 1);
 
-    int[] validIDs = {17,18,19,20,21,22,6,7,8,9,10,11};
+    int[] validIDs = {17,18,21,22,27,24,2,5,6,7,8,9,10,11}; //might wanna add 3,4,19,20 ? idk its the back of  the hub
     LimelightHelpers.SetFiducialIDFiltersOverride(LimeLightName, validIDs);
 
    
