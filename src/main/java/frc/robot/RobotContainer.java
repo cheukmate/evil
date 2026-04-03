@@ -259,8 +259,8 @@ public class RobotContainer
 
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       // aims the front of the robot at the hub using odometry and the pose of the hub
-      driverXbox.rightTrigger().onTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
-      driverXbox.rightTrigger().onFalse(driveFieldOrientedAngularVelocity);
+      driverXbox.rightTrigger().whileTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
+      driverXbox.rightTrigger().whileFalse(driveFieldOrientedAngularVelocity);
       // shoots the ball based on the distance from the hub using an interpolating tree map!
       driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase)); 
       driverXbox.leftTrigger().onFalse(shooter.stopCommand());
