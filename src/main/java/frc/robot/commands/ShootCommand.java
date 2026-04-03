@@ -41,40 +41,41 @@ public class ShootCommand extends Command {
     private final Optional<SwerveSubsystem> swerve;
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     private final double kickerSpeed = 1;
+    private final double kickerStop = 0;
   
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE
-            new RecordedShot(Meters.of(1.25), RPM.of(2300), Second.of(1)),
-            new RecordedShot(Meters.of(1.35), RPM.of(2311),Second.of(1)),
-            new RecordedShot(Meters.of(1.45), RPM.of(2350),Second.of(1)),
-            new RecordedShot(Meters.of(1.55), RPM.of(2400), Second.of(1)),
-            new RecordedShot(Meters.of(1.65), RPM.of(2450),Second.of(1)),
-            new RecordedShot(Meters.of(1.75), RPM.of(2500),Second.of(1)),
-            new RecordedShot(Meters.of(1.85), RPM.of(2500), Second.of(1)),
-            new RecordedShot(Meters.of(1.95), RPM.of(2530),Second.of(1)),
-            new RecordedShot(Meters.of(2.05), RPM.of(2570),Second.of(1)),
+            new RecordedShot(Meters.of(1.25), RPM.of(2000), Second.of(1)),
+            new RecordedShot(Meters.of(1.35), RPM.of(2100),Second.of(1)),
+            new RecordedShot(Meters.of(1.45), RPM.of(2150),Second.of(1)),
+            new RecordedShot(Meters.of(1.55), RPM.of(2200), Second.of(1)),
+            new RecordedShot(Meters.of(1.65), RPM.of(2250),Second.of(1)),
+            new RecordedShot(Meters.of(1.75), RPM.of(2300),Second.of(1)),
+            new RecordedShot(Meters.of(1.85), RPM.of(2350), Second.of(1)),
+            new RecordedShot(Meters.of(1.95), RPM.of(2400),Second.of(1)),
+            new RecordedShot(Meters.of(2.05), RPM.of(2550),Second.of(1)),
             new RecordedShot(Meters.of(2.15), RPM.of(2600), Second.of(1)),
-            new RecordedShot(Meters.of(2.30), RPM.of(2800),Second.of(1)),
-            new RecordedShot(Meters.of(2.45), RPM.of(3000),Second.of(1)),
-            new RecordedShot(Meters.of(2.60), RPM.of(3100), Second.of(1)),
-            new RecordedShot(Meters.of(2.70), RPM.of(3200),Second.of(1)),
-            new RecordedShot(Meters.of(2.90), RPM.of(3300),Second.of(1)),
-            new RecordedShot(Meters.of(3.00), RPM.of(3400),Second.of(1)),
-            new RecordedShot(Meters.of(3.10), RPM.of(3500),Second.of(1)),
-            new RecordedShot(Meters.of(3.20), RPM.of(3530),Second.of(1)),
-            new RecordedShot(Meters.of(3.30), RPM.of(3590),Second.of(1)),
-            new RecordedShot(Meters.of(3.40), RPM.of(3600),Second.of(1)),
-            new RecordedShot(Meters.of(3.50), RPM.of(3650),Second.of(1)),
-            new RecordedShot(Meters.of(3.60), RPM.of(3690),Second.of(1)),
-            new RecordedShot(Meters.of(3.70), RPM.of(3700),Second.of(1)),
-            new RecordedShot(Meters.of(3.80), RPM.of(3800),Second.of(1)),
-            new RecordedShot(Meters.of(3.90), RPM.of(3830),Second.of(1)),
-            new RecordedShot(Meters.of(4.00), RPM.of(3840),Second.of(1)),
-            new RecordedShot(Meters.of(4.5), RPM.of(3900), Second.of(1)),
-            new RecordedShot(Meters.of(5.00), RPM.of(4050),Second.of(1))
+            new RecordedShot(Meters.of(2.30), RPM.of(2650),Second.of(1)),
+            new RecordedShot(Meters.of(2.45), RPM.of(2700),Second.of(1)),
+            new RecordedShot(Meters.of(2.60), RPM.of(2750), Second.of(1)),
+            new RecordedShot(Meters.of(2.70), RPM.of(2800),Second.of(1)),
+            new RecordedShot(Meters.of(2.90), RPM.of(2850),Second.of(1)),
+            new RecordedShot(Meters.of(3.00), RPM.of(2900),Second.of(1)),
+            new RecordedShot(Meters.of(3.10), RPM.of(2950),Second.of(1)),
+            new RecordedShot(Meters.of(3.20), RPM.of(3000),Second.of(1)),
+            new RecordedShot(Meters.of(3.30), RPM.of(3050),Second.of(1)),
+            new RecordedShot(Meters.of(3.40), RPM.of(3100),Second.of(1)),
+            new RecordedShot(Meters.of(3.50), RPM.of(3150),Second.of(1)),
+            new RecordedShot(Meters.of(3.60), RPM.of(3200),Second.of(1)),
+            new RecordedShot(Meters.of(3.70), RPM.of(3250),Second.of(1)),
+            new RecordedShot(Meters.of(3.80), RPM.of(3300),Second.of(1)),
+            new RecordedShot(Meters.of(3.90), RPM.of(3350),Second.of(1)),
+            new RecordedShot(Meters.of(4.00), RPM.of(3400),Second.of(1)),
+            new RecordedShot(Meters.of(4.5), RPM.of(3450), Second.of(1)),
+            new RecordedShot(Meters.of(5.00), RPM.of(3500),Second.of(1))
 
 
 
@@ -128,7 +129,7 @@ public class ShootCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         shooter.setVelocitySetpoint(goalRPM);
-        kicker.feedCommand();
+       // kicker.feedCommand();
         // if (swerve.isEmpty()) {
         //     hood.setAngleSetpoint(goalDegree);
         // }
@@ -169,10 +170,10 @@ public class ShootCommand extends Command {
         // }
 
          if(shooterReady){
-          kicker.feedCommand();
-          System.out.println("Im ready im ready");
+          kicker.setDutyCycleSetpoint(kickerSpeed);
+          
         } else {
-         kicker.stopCommand();
+         kicker.setDutyCycleSetpoint(kickerStop);
      }
             
        
@@ -183,7 +184,7 @@ public class ShootCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         shooter.setDutyCycleSetpoint(0);
-        kicker.stopCommand();
+        kicker.setDutyCycleSetpoint(kickerStop);
        // hood.setDutyCycleSetpoint(0);
 
     }

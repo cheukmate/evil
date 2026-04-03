@@ -72,6 +72,10 @@ public class Kicker extends SubsystemBase {
     kickerWheels.set(speed);
   }
 
+  public void setDutyCycleSetpoint(double kickerSpeed){
+    kickerWheels.setDutyCycleSetpoint(kickerSpeed);
+  }
+
 
   /**
    * Command to run the hopper in reverse while held.
