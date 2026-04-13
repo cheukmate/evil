@@ -102,7 +102,7 @@ public class Intake extends SubsystemBase {
   private final ArmConfig intakePivotConfig = new ArmConfig(intakePivotController)
   
       //.withSoftLimits(Degrees.of(0), Degrees.of(242)) //make real number
-      .withHardLimit(Degrees.of(0), Degrees.of(155)) // make real number
+      .withHardLimit(Degrees.of(0), Degrees.of(144)) // make real number
       .withStartingPosition(Degrees.of(0))
       .withLength(Feet.of(.5))
       .withMass(Pounds.of(10)) // Reis says: 2 pounds, not a lot

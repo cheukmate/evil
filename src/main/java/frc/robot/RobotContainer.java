@@ -144,29 +144,15 @@ public class RobotContainer
   //--------------------------------------------------CHOREO TRAJECTORIES--------------------------------------------------//
 
 
-
+//lol
   
    //-----------------------------------------------NAMED COMMANDS---------------------------------------------------------//
-   
-    NamedCommands.registerCommand("EatBalls", intake.rollerCommand(.5).repeatedly());
-    NamedCommands.registerCommand("RevShooter", shooter.setVelocityCommand(RPM.of(2500)).withTimeout(1));
-    NamedCommands.registerCommand("KickBalls", kicker.feedCommand().withTimeout(10));
-    NamedCommands.registerCommand("DeployIntake", intake.setPower(.5).withTimeout(1
-    ));
-    NamedCommands.registerCommand("StopIntaking", intake.rollerCommand(0)); 
-    NamedCommands.registerCommand("Stop Shooting", (shooter.stopCommand().alongWith(kicker.stopCommand()).withTimeout(.5)));
-    NamedCommands.registerCommand("Aim", new AimAtHubCommand(drivebase, driveAngularVelocity).withTimeout(2));
-    NamedCommands.registerCommand("Shoot!", new ShootCommand(shooter, kicker, drivebase).withTimeout(5));
-    
+
+//lol    
 
    // -----------------------------------------EVENT TRIGGERS--------------------------------------------------------------//
 
-   new EventTrigger("IntakeStart").onTrue(intake.setPower(.5));
-
-  new EventTrigger("Start Roller!").onTrue(intake.rollerCommand(.5));
-
-
-  new EventTrigger("IntakeStop").onTrue(intake.rollerCommand(0));
+//loldr
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -262,8 +248,8 @@ public class RobotContainer
       driverXbox.rightTrigger().whileTrue(new AimAtHubCommand(drivebase, driveAngularVelocity));
       driverXbox.rightTrigger().whileFalse(driveFieldOrientedAngularVelocity);
       // shoots the ball based on the distance from the hub using an interpolating tree map!
-      driverXbox.leftTrigger().onTrue(new ShootCommand(shooter, kicker, drivebase)); 
-      driverXbox.leftTrigger().onFalse(shooter.stopCommand());
+     driverXbox.leftTrigger().whileTrue(new ShootCommand(shooter, kicker, drivebase)); 
+      driverXbox.leftTrigger().whileFalse(shooter.stopCommand());
 
       
      
@@ -281,13 +267,15 @@ public class RobotContainer
                                                     operatorXbox.rightTrigger().whileTrue(shooter.setVelocityCommand(RPM.of(2500)));
                                                     operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(3000)));
                                                     //operatorXbox.povUp().whileTrue(shooter.setVelocityCommand(RPM.of(2300)));
-                                                   
+                                                      //   operatorXbox.leftTrigger().whileTrue(new ShootCommand(shooter, kicker, drivebase)); 
+                                                      //    operatorXbox.leftTrigger().whileFalse(shooter.stopCommand());
+
 
                                                    
 
    
                                                     operatorXbox.rightTrigger().whileFalse(shooter.setDutyCycle(0));
-                                                    operatorXbox.leftTrigger().whileFalse(shooter.setDutyCycle(0));
+                                                  
                                                     operatorXbox.povDown().whileFalse(shooter.setDutyCycle(0));
                                                     operatorXbox.povLeft().whileFalse(shooter.setDutyCycle(0));
 

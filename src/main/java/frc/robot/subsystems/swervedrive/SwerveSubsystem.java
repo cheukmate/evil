@@ -146,7 +146,7 @@ public class SwerveSubsystem extends SubsystemBase
     
 
 
-updateVisionOdometry();
+//updateVisionOdometry();
 swerveDrive.updateOdometry();
 
   }
@@ -159,7 +159,11 @@ swerveDrive.updateOdometry();
     LimelightHelpers.SetRobotOrientation(LimeLightName, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   // Get the pose estimate
+ 
   LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimeLightName);
+
+  
+
 if(limelightMeasurement.tagCount>= 2){
 swerveDrive.addVisionMeasurement(
     limelightMeasurement.pose,

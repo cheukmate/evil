@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Bump to Neutral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Neutral to Hub"
+            "pathName": "DRIVE FORWARD"
           }
         }
       ]
